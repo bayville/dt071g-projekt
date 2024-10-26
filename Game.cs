@@ -2,13 +2,19 @@ namespace Scoreboard
 {
     public class Game
     {
-    private readonly GameTimer gameTimer; 
-    private ConsoleDisplay consoleDisplay;
+    private GameTimer gameTimer; 
+    private readonly ConsoleDisplay consoleDisplay;
+    private readonly GameScore score;
+    public EventHandler<GameEventArgs>? UpdateGame;
+    public GameSettings Settings {get; private set;}
 
-    public Game(){
+    public Game(GameSettings settings){
+        Settings = settings;
         Console.WriteLine("I Start");
-        consoleDisplay = new();
-        gameTimer = NewTimer();
+        consoleDisplay = new(this);
+        score = new();
+        gameTimer = NewTimer(settings.PeriodLength);
+
     }
         public void Start()
         {
@@ -25,19 +31,46 @@ namespace Scoreboard
             gameTimer.AdjustTime(timeAdjustment);
         }
 
-        public GameTimer NewTimer() {
+        public void AddGoal(int team)
+        {
+            score.AddGoal(team);
+            Update();  // Uppdatera displayen efter ett mål
+        }
+        public void RemoveGoal(int team)
+        {
+            score.RemoveGoal(team);
+            Update();  // Uppdatera displayen efter ett mål
+        }
+
+
+        public GameTimer NewTimer(int periodLength) {
             if(gameTimer != null){
                 Stop();
             }
             
-            Console.WriteLine("Ny period, fyll i antal minuter");
-            int minutes = Convert.ToInt32(Console.ReadLine());
+            Console.WriteLine($"Ny period, fyll i antal minuter eller tryck enter för {periodLength} ");
+                  
+            string input = Console.ReadLine()!;
+            if (!String.IsNullOrWhiteSpace(input))
+            {
+                periodLength = Convert.ToInt32(input);
+            }
 
-            var newTimer = new GameTimer(50); // 0.05-sekundsintervall
-            newTimer.SetTimers(TimeSpan.FromMinutes(minutes));
-            consoleDisplay.RegisterEventHandlers(newTimer);
+            
+
+            var newTimer = new GameTimer(periodLength, Settings.CountDown);
+            newTimer.Refresh += (sender, args) => Update();
+            gameTimer = newTimer;
+            Update();
             return newTimer;
         }  
+
+        private void Update()
+        {
+            // Console.WriteLine("I update");
+            // Console.WriteLine($"{gameTimer.gameClock} {gameTimer.timePassed} {gameTimer.isRunning} {score.HomeScore} {score.AwayScore}");
+            UpdateGame?.Invoke(this, new GameEventArgs(gameTimer.gameClock, gameTimer.timePassed, gameTimer.isRunning, score.HomeScore, score.AwayScore));
+        }
     }
 
 

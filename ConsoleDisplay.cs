@@ -1,18 +1,49 @@
+using System.Runtime.CompilerServices;
+
 namespace Scoreboard
 {
     public class ConsoleDisplay
     {
-         public void RegisterEventHandlers(GameTimer timer) {
-            timer.Refresh += (sender, e) => {
-                Console.Clear();
-                Console.WriteLine("Press 's' to start, 'p' to pause, 'q' to quit.");
-                Console.WriteLine($"Game Clock: {e.gameClock:mm\\:ss\\:f}");
-                Console.WriteLine($"Time passed: {e.timePassed}");
-            };
 
-            timer.TimeStopped += (sender, e) => {
-                Console.WriteLine("Time has stopped!");
-            };
+        public ConsoleDisplay(Game game)
+        {
+            game.UpdateGame += (sender, data) => UpdateDisplay(data);
         }
+        //         public void RegisterEventHandlers(Game game)
+        // {
+        // }
+        public void UpdateDisplay(GameEventArgs data)
+        {
+            Console.Clear();
+            Console.WriteLine("I UpdateDisplay");
+            Console.WriteLine("\nCONTROLS:\n");
+            Console.WriteLine("S to start\nP to pause\nQ to quit\nA to adjust time\nN for new period\n\n");
+            Console.WriteLine(FormatDisplayTime(data.GameClock));
+            // Console.WriteLine($"Time passed: {data.TimePassed}");
+            Console.WriteLine("\nSCORE:");
+            Console.WriteLine($"{data.HomeScore} : H - A : {data.AwayScore}");
+
+
+            if (!data.IsRunning)
+            {
+                Console.WriteLine("Klockan stoppad!");
+            }
+        }
+
+        private string FormatDisplayTime(TimeSpan time)
+        {
+            if (time.TotalMinutes >= 1)
+            {
+                if (time.TotalMinutes <= 9){
+                    return $"Tid:\n{time:m\\:ss}\n";
+                }   
+                return $"Tid:\n{time:mm\\:ss}\n";
+            } 
+            else
+            {
+                return $"Tid:\n{time:ss\\.f}\n";
+            }
+        }
+
     }
 }

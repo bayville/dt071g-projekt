@@ -4,24 +4,25 @@ namespace Scoreboard
     {
 
         public TimeSpan gameClock { get; private set; }
-
         public bool isRunning { get; private set; }
         public TimeSpan timePassed { get; private set; } // For testing
-        private readonly int interval; // Time in milliseconds
+        private readonly int interval = 50; // Time in milliseconds
         private CancellationTokenSource? cancellationTokenSource;
         private DateTime startTime;
         private DateTime currentTime;
-        private TimeSpan periodLength;
+        public TimeSpan periodLength {get; private set;}
         private readonly bool countDown;
+
+        // Events
         public delegate void RefreshHandler(object sender, TimerEventArgs e);
         public event RefreshHandler? TimeStopped;
         public event RefreshHandler? Refresh;
 
 
-        public GameTimer(int milliseconds)
+        public GameTimer(int periodLength, bool countDown)
         {
-            countDown = false;
-            interval = 50; // millseconds
+            this.countDown = countDown;
+            SetTimers(TimeSpan.FromMinutes(periodLength));
             isRunning = false;
         }
 
@@ -77,8 +78,6 @@ namespace Scoreboard
             {
                 gameClock += timePassed;
             }
-
-
         }
 
         public void StopClock()
@@ -86,6 +85,7 @@ namespace Scoreboard
             isRunning = false;
             OnTimeStop();
         }
+
 
         public void SetTimers(TimeSpan gameTime)
         {
@@ -98,8 +98,12 @@ namespace Scoreboard
                 gameClock = TimeSpan.Zero;
                 periodLength = gameTime;
             }
+        }
 
-
+        public void AdjustTime(TimeSpan adjustment)
+        {
+            gameClock += adjustment;
+            OnTimeStop();
         }
 
         private void OnTimeStop()
@@ -113,11 +117,7 @@ namespace Scoreboard
             Refresh?.Invoke(this, new TimerEventArgs(this));
         }
 
-        public void AdjustTime(TimeSpan adjustment)
-        {
-            gameClock += adjustment;
-            OnTimeStop();
-        }
+
 
     }
 }

@@ -1,5 +1,3 @@
-using System.Runtime.InteropServices;
-
 namespace Scoreboard
 {
     public class Controller
@@ -12,15 +10,16 @@ namespace Scoreboard
         }
         public async Task ListenToKeyPress()
         {
-            Console.WriteLine("Press 's' to start, 'p' to pause, 'q' to quit.");
+            Console.WriteLine("\nCONTROLS:\n");
+            Console.WriteLine("S to start\nP to pause\nQ to quit\nA to adjust time\nN for new period\n");
 
             await Task.Run(() =>
             {
                 while (true)
                 {
-                    var input = Console.ReadKey(true).Key;
+                    var input = Console.ReadKey(true);
 
-                    switch (input)
+                    switch (input.Key)
                     {
                         case ConsoleKey.S:
                             game.Start();
@@ -41,8 +40,31 @@ namespace Scoreboard
                             game.AdjustTime(timeAdjustment);
                             break;
 
+                        case ConsoleKey.H:
+                            if (input.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                game.RemoveGoal(0);
+                            }
+                            else
+                            {
+                                game.AddGoal(0);
+                            }
+                            break;
+
+                        case ConsoleKey.G:
+                            if (input.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                game.RemoveGoal(1);
+                            }
+                            else
+                            {
+                                game.AddGoal(1);
+                            }
+
+                            break;
+
                         case ConsoleKey.N:
-                            game.NewTimer();
+                            game.NewTimer(game.Settings.PeriodLength);
                             break;
 
                         default:
