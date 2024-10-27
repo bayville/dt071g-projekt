@@ -18,13 +18,14 @@ namespace Scoreboard
             Console.WriteLine("I UpdateDisplay");
             Console.WriteLine("\nCONTROLS:\n");
             Console.WriteLine("S to start\nP to pause\nQ to quit\nA to adjust time\nN for new period\n\n");
-            Console.WriteLine(FormatDisplayTime(data.GameClock));
+            Console.WriteLine(data.GameClock.activeTimer.Mode);
+            Console.WriteLine(FormatDisplayTime(data.GameClock.activeTimer.CurrentTime));
             // Console.WriteLine($"Time passed: {data.TimePassed}");
             Console.WriteLine("\nSCORE:");
-            Console.WriteLine($"{data.HomeScore} : H - A : {data.AwayScore}");
+            Console.WriteLine($"{data.GameScore.HomeScore} : H - A : {data.GameScore.AwayScore}");
 
 
-            if (!data.IsRunning)
+            if (!data.GameClock.activeTimer.IsRunning)
             {
                 Console.WriteLine("Klockan stoppad!");
             }

@@ -1,9 +1,9 @@
+
 namespace Scoreboard
 {
     public class Game
     {
-    private GameTimer gameTimer; 
-
+    private GameClock gameClock;
     private readonly GameScore score;
     public EventHandler<GameEventArgs>? UpdateGame;
     public GameSettings Settings {get; private set;}
@@ -12,22 +12,41 @@ namespace Scoreboard
         Settings = settings;
         Console.WriteLine("I Start");
         score = new();
-        gameTimer = NewTimer(settings.PeriodLength);
+        gameClock = new GameClock();
+        gameClock.activeTimer.TimerUpdated += (sender, args) => Update();
 
     }
+        public void ActivateTimeOut()
+        {
+            gameClock.ActivateTimeOut();
+            gameClock.activeTimer.TimerUpdated += (sender, args) => Update();
+            Update();
+        }
+        public void ActivateIntermisson()
+        {
+            gameClock.ActivateIntermission();
+            gameClock.activeTimer.TimerUpdated += (sender, args) => Update();
+            Update();
+        }
+
+        public void ActivateGameTime()
+        {
+            gameClock.ActivateGameTime();
+            Update();
+        }
         public void Start()
         {
-            _ = gameTimer.StartClockAsync(); 
+            gameClock.StartActiveClock(); 
         }
 
         public void Stop()
         {
-            gameTimer.StopClock();
+            gameClock.StopActiveClock();
         }
 
         public void AdjustTime(TimeSpan timeAdjustment)
         {
-            gameTimer.AdjustTime(timeAdjustment);
+            // gameTimer.AdjustTime(timeAdjustment);
         }
 
         public void AddGoal(int team)
@@ -42,30 +61,21 @@ namespace Scoreboard
         }
 
 
-        public GameTimer NewTimer(int periodLength) {
-            if(gameTimer != null){
-                Stop();
-            }
-            Console.WriteLine($"Ny period, fyll i antal minuter eller tryck enter för {periodLength} ");
-                  
-            string input = Console.ReadLine()!;
-            if (!String.IsNullOrWhiteSpace(input))
-            {
-                periodLength = Convert.ToInt32(input);
-            }
-
-            
-
-            var newTimer = new GameTimer(periodLength, Settings.CountDown);
-            newTimer.Refresh += (sender, args) => Update();
-            gameTimer = newTimer;
+        public void NewPeriodTimer(TimeSpan periodLength) {
+            // if(gameTimer != null){
+            //     Stop();
+            // }
+            gameClock.NewPeriodTimer(periodLength);
+            gameClock.activeTimer.TimerUpdated += (sender, args) => Update();
             Update();
-            return newTimer;
+            // return newTimer;
         }  
 
         private void Update()
         {
-            UpdateGame?.Invoke(this, new GameEventArgs(gameTimer.gameClock, gameTimer.isRunning, score.HomeScore, score.AwayScore));
+            // Console.WriteLine($"i Update: {gameClock.activeTimer.CurrentTime}");
+            // UpdateGame?.Invoke(this, new GameEventArgs(gameClock.activeTimer.CurrentTime, gameClock.activeTimer.IsRunning, gameClock.activeTimer.Mode ,score.HomeScore, score.AwayScore));
+            UpdateGame?.Invoke(this, new GameEventArgs(gameClock, score));
         }
     }
 

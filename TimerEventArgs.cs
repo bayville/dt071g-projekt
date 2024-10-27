@@ -1,18 +1,15 @@
-using System.Runtime.CompilerServices;
 
 namespace Scoreboard
 {
     public class TimerEventArgs : EventArgs
     {
-        public TimeSpan gameClock;
-        public TimeSpan timePassed;
+        public TimeSpan currentTime;
         public bool isRunning;
 
-        public TimerEventArgs(GameTimer t)
+        public TimerEventArgs(BaseTimer t)
         {
-            gameClock = t.gameClock;
-            timePassed = t.timePassed;
-            isRunning = t.isRunning;
+            currentTime = t.CurrentTime;
+            isRunning = t.IsRunning;
         }
     }
 }

@@ -32,12 +32,22 @@ namespace Scoreboard
                         case ConsoleKey.Q:
                             Console.WriteLine("Quit");
                             break;
+                        case ConsoleKey.T:
+                            game.ActivateTimeOut();
+                            break;
+                        case ConsoleKey.O:
+                            game.ActivateGameTime();
+                            break;
 
                         case ConsoleKey.A:
                             Console.WriteLine("Skriv antal sekunder");
                             double adjustment = double.Parse(Console.ReadLine());
                             TimeSpan timeAdjustment = TimeSpan.FromSeconds(adjustment);
                             game.AdjustTime(timeAdjustment);
+                            break;
+                        
+                        case ConsoleKey.I:
+                            game.ActivateIntermisson();
                             break;
 
                         case ConsoleKey.H:
@@ -64,7 +74,7 @@ namespace Scoreboard
                             break;
 
                         case ConsoleKey.N:
-                            game.NewTimer(game.Settings.PeriodLength);
+                            game.NewPeriodTimer(game.Settings.PeriodLength);
                             break;
 
                         default:
