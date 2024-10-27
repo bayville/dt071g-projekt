@@ -8,10 +8,9 @@ namespace Scoreboard
         public int AwayScore { get; set; }
         public bool IsRunning { get; set; }
         
-        public GameEventArgs(TimeSpan gameClock, TimeSpan timePassed, bool isRunning, int homeScore, int awayScore)
+        public GameEventArgs(TimeSpan gameClock, bool isRunning, int homeScore, int awayScore)
         {
             GameClock = gameClock;
-            TimePassed = timePassed;
             IsRunning = isRunning;
             HomeScore = homeScore;
             AwayScore = awayScore;

@@ -3,7 +3,7 @@ namespace Scoreboard
     public class Game
     {
     private GameTimer gameTimer; 
-    private readonly ConsoleDisplay consoleDisplay;
+
     private readonly GameScore score;
     public EventHandler<GameEventArgs>? UpdateGame;
     public GameSettings Settings {get; private set;}
@@ -11,7 +11,6 @@ namespace Scoreboard
     public Game(GameSettings settings){
         Settings = settings;
         Console.WriteLine("I Start");
-        consoleDisplay = new(this);
         score = new();
         gameTimer = NewTimer(settings.PeriodLength);
 
@@ -34,12 +33,12 @@ namespace Scoreboard
         public void AddGoal(int team)
         {
             score.AddGoal(team);
-            Update();  // Uppdatera displayen efter ett mål
+            Update();
         }
         public void RemoveGoal(int team)
         {
             score.RemoveGoal(team);
-            Update();  // Uppdatera displayen efter ett mål
+            Update();
         }
 
 
@@ -47,7 +46,6 @@ namespace Scoreboard
             if(gameTimer != null){
                 Stop();
             }
-            
             Console.WriteLine($"Ny period, fyll i antal minuter eller tryck enter för {periodLength} ");
                   
             string input = Console.ReadLine()!;
@@ -67,9 +65,7 @@ namespace Scoreboard
 
         private void Update()
         {
-            // Console.WriteLine("I update");
-            // Console.WriteLine($"{gameTimer.gameClock} {gameTimer.timePassed} {gameTimer.isRunning} {score.HomeScore} {score.AwayScore}");
-            UpdateGame?.Invoke(this, new GameEventArgs(gameTimer.gameClock, gameTimer.timePassed, gameTimer.isRunning, score.HomeScore, score.AwayScore));
+            UpdateGame?.Invoke(this, new GameEventArgs(gameTimer.gameClock, gameTimer.isRunning, score.HomeScore, score.AwayScore));
         }
     }
 
