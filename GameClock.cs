@@ -1,37 +1,26 @@
-
 namespace Scoreboard
 {
     public class GameClock
     {
         private GameTimer gameTimer;
-        public BaseTimer activeTimer;
-
-        public GameClock()
+        public BaseTimer activeTimer {get; private set;}
+        private readonly GameSettings Settings;
+        public GameClock(GameSettings settings)
         {
-            gameTimer = new GameTimer(TimeSpan.FromMinutes(20), true);
+            Settings = settings;
+            gameTimer = new GameTimer(settings.PeriodLength, settings.CountDown);
             activeTimer = gameTimer;
-            RegisterTimerEvents();
         }
-
-
-        private void RegisterTimerEvents()
-        {
-            activeTimer.TimerStopped += OnTimerStopped;
-            activeTimer.TimerUpdated += OnTimerUpdated;
-        }
-
         public void ActivateTimeOut()
         {
             StopActiveClock();
             activeTimer = new TimeOutTimer(TimeSpan.FromSeconds(30));
-            activeTimer.TimerUpdated += TimeEnded;
         }
 
         public void ActivateIntermission()
         {
             StopActiveClock();
             activeTimer = new IntermissionTimer(TimeSpan.FromMinutes(18));
-            activeTimer.TimerUpdated += TimeEnded;
         }
 
         public void ActivateGameTime()
@@ -40,18 +29,11 @@ namespace Scoreboard
             activeTimer = gameTimer;
         }
 
-        public void NewPeriodTimer(TimeSpan periodLength)
+        public void NewPeriodTimer(TimeSpan periodLength, bool countDown)
         {
-            activeTimer = new GameTimer(periodLength, true);
+            activeTimer = new GameTimer(periodLength, countDown);
         }
-        public void TimeEnded(object sender, EventArgs e)
-        {
-            if (activeTimer.CurrentTime <= TimeSpan.Zero)
-            {
-                StopActiveClock();
-                activeTimer = gameTimer;
-            };
-        }
+   
         
         public void StartActiveClock()
         {
@@ -62,14 +44,10 @@ namespace Scoreboard
         {
             activeTimer.Stop();
         }
-        private void OnTimerStopped(object sender, EventArgs e)
-        {
-            Console.WriteLine("TimerStopped");
-        }
 
-        private void OnTimerUpdated(object sender, EventArgs e)
+        public void AdjustActiveClockTime(TimeSpan timeAdjustment)
         {
-
+            activeTimer.AdjustTime(timeAdjustment);
         }
     }
 

@@ -22,11 +22,11 @@ namespace Scoreboard
     {
         if (team == 0)
         {
-            HomeScore--;
+             HomeScore = Math.Max(0, HomeScore - 1);
         }
         else if (team == 1)
         {
-            AwayScore--;
+             AwayScore = Math.Max(0, AwayScore - 1);
         }
     }
 

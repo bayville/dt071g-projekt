@@ -40,14 +40,15 @@ namespace Scoreboard
                             break;
 
                         case ConsoleKey.A:
-                            Console.WriteLine("Skriv antal sekunder");
+                            game.Stop();
+                            Console.WriteLine("Skriv in antal sekunder att justera, sätt '-' framför siffran för att ange negativt värde");
                             double adjustment = double.Parse(Console.ReadLine());
                             TimeSpan timeAdjustment = TimeSpan.FromSeconds(adjustment);
                             game.AdjustTime(timeAdjustment);
                             break;
                         
                         case ConsoleKey.I:
-                            game.ActivateIntermisson();
+                            game.ActivateIntermission();
                             break;
 
                         case ConsoleKey.H:
@@ -74,7 +75,14 @@ namespace Scoreboard
                             break;
 
                         case ConsoleKey.N:
-                            game.NewPeriodTimer(game.Settings.PeriodLength);
+                            if (input.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            {
+                                game.PreviousPeriod();
+                            }
+                            else
+                            {
+                                game.NextPeriod();
+                            }
                             break;
 
                         default:

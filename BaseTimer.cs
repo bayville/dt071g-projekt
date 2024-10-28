@@ -5,13 +5,14 @@ namespace Scoreboard
         public TimeSpan CurrentTime { get; protected set; }
         public bool IsRunning { get; private set; }
         public TimeSpan TimerLength { get; private set; }
-        public string? Mode;
+        public string? Mode {get; set;}
         protected DateTime startTime;
         private readonly int Interval;
         private CancellationTokenSource? cancellationTokenSource;
-        private readonly bool CountDown;
+        public  bool CountDown {get; private set;}
         public event EventHandler? TimerUpdated;
         public event EventHandler? TimerStopped;
+        public event EventHandler? TimerEnded;
 
 
         protected BaseTimer( bool countDown, TimeSpan timerLength, int interval)
@@ -39,6 +40,7 @@ namespace Scoreboard
                 if (ShouldStop())
                 {
                     Stop();
+                    OnTimerEnded();
                 }
             }
         }
@@ -56,7 +58,7 @@ namespace Scoreboard
             OnTimerUpdated();
         }
 
-      public void UpdateCurrentTime(TimeSpan currentTime)
+        public void UpdateCurrentTime(TimeSpan currentTime)
         {
             CurrentTime = currentTime;
             OnTimerUpdated();
@@ -84,6 +86,11 @@ namespace Scoreboard
         protected virtual void OnTimerStopped()
         {
             TimerStopped?.Invoke(this, new TimerEventArgs(this));
+        }
+
+        protected virtual void OnTimerEnded()
+        {
+            TimerEnded?.Invoke(this, new TimerEventArgs(this));
         }
 
 

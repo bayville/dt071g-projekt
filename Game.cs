@@ -1,42 +1,78 @@
-
 namespace Scoreboard
 {
     public class Game
     {
-    private GameClock gameClock;
-    private readonly GameScore score;
-    public EventHandler<GameEventArgs>? UpdateGame;
-    public GameSettings Settings {get; private set;}
+        private GameClock gameClock;
+        private readonly GameScore gameScore;
+        private readonly GamePeriod gamePeriod;
+        public EventHandler<GameEventArgs>? UpdateGame;
+        public GameSettings Settings { get; private set; }
 
-    public Game(GameSettings settings){
-        Settings = settings;
-        Console.WriteLine("I Start");
-        score = new();
-        gameClock = new GameClock();
-        gameClock.activeTimer.TimerUpdated += (sender, args) => Update();
-
-    }
-        public void ActivateTimeOut()
+        public Game(GameSettings settings)
         {
-            gameClock.ActivateTimeOut();
-            gameClock.activeTimer.TimerUpdated += (sender, args) => Update();
+            Settings = settings;
+            gameScore = new();
+            gamePeriod = new(settings);
+            gameClock = new GameClock(settings);
+
+            RegisterForUpdates();
+        }
+
+        private void RegisterForUpdates()
+        {
+            UnregisterFromUpdates();
+
+            gameClock.activeTimer.TimerUpdated += OnTimerUpdated;
+            gameClock.activeTimer.TimerEnded += OnTimerEnded;
+        }
+
+        private void UnregisterFromUpdates()
+        {
+            if (gameClock.activeTimer != null)
+            {
+                gameClock.activeTimer.TimerUpdated -= OnTimerUpdated;
+            }
+        }
+
+        private void OnTimerUpdated(object? sender, EventArgs args)
+        {
+
             Update();
         }
-        public void ActivateIntermisson()
+
+        private void OnTimerEnded(object? sender, EventArgs e)
         {
+            Console.WriteLine(gameClock.activeTimer.GetType());
+            ActivateGameTime();
+        }
+
+        public void ActivateTimeOut()
+        {
+            UnregisterFromUpdates();
+            gameClock.ActivateTimeOut();
+            RegisterForUpdates();
+            Update();
+        }
+
+        public void ActivateIntermission()
+        {
+            UnregisterFromUpdates();
             gameClock.ActivateIntermission();
-            gameClock.activeTimer.TimerUpdated += (sender, args) => Update();
+            RegisterForUpdates();
             Update();
         }
 
         public void ActivateGameTime()
         {
+            UnregisterFromUpdates();
             gameClock.ActivateGameTime();
+            RegisterForUpdates();
             Update();
         }
+
         public void Start()
         {
-            gameClock.StartActiveClock(); 
+            gameClock.StartActiveClock();
         }
 
         public void Stop()
@@ -46,38 +82,50 @@ namespace Scoreboard
 
         public void AdjustTime(TimeSpan timeAdjustment)
         {
-            // gameTimer.AdjustTime(timeAdjustment);
+            gameClock.AdjustActiveClockTime(timeAdjustment);
         }
 
         public void AddGoal(int team)
         {
-            score.AddGoal(team);
+            gameScore.AddGoal(team);
             Update();
         }
+
         public void RemoveGoal(int team)
         {
-            score.RemoveGoal(team);
+            gameScore.RemoveGoal(team);
             Update();
         }
 
+        public void NextPeriod()
+        {
+            UnregisterFromUpdates();
+            gameClock.StopActiveClock();
 
-        public void NewPeriodTimer(TimeSpan periodLength) {
-            // if(gameTimer != null){
-            //     Stop();
-            // }
-            gameClock.NewPeriodTimer(periodLength);
-            gameClock.activeTimer.TimerUpdated += (sender, args) => Update();
+            gamePeriod.IncrementPeriod();
+            var periodLength = gamePeriod.GetPeriodLength();
+            gameClock.NewPeriodTimer(periodLength, Settings.CountDown);
+
+            RegisterForUpdates();
             Update();
-            // return newTimer;
-        }  
+        }
+
+        public void PreviousPeriod()
+        {
+            UnregisterFromUpdates();
+            gameClock.StopActiveClock();
+
+            gamePeriod.DecrementPeriod();
+            var periodLength = gamePeriod.GetPeriodLength();
+            gameClock.NewPeriodTimer(periodLength, Settings.CountDown);
+
+            RegisterForUpdates();
+            Update();
+        }
 
         private void Update()
         {
-            // Console.WriteLine($"i Update: {gameClock.activeTimer.CurrentTime}");
-            // UpdateGame?.Invoke(this, new GameEventArgs(gameClock.activeTimer.CurrentTime, gameClock.activeTimer.IsRunning, gameClock.activeTimer.Mode ,score.HomeScore, score.AwayScore));
-            UpdateGame?.Invoke(this, new GameEventArgs(gameClock, score));
+            UpdateGame?.Invoke(this, new GameEventArgs(gameClock, gameScore, gamePeriod));
         }
     }
-
-
 }
