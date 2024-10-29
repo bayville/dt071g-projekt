@@ -1,4 +1,3 @@
-
 namespace Scoreboard
 {
     public static class StartUpDialog
@@ -49,8 +48,10 @@ namespace Scoreboard
                     confirmed = false;
                     break;
             }
-
             return confirmed;
         }
+
     }
+
+
 }

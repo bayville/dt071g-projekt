@@ -143,7 +143,6 @@ namespace Scoreboard
         }
 
 
-
         private void RestoreGameState(GameEventArgs restoreData)
         {
         SetScore(restoreData.HomeScore, restoreData.AwayScore);

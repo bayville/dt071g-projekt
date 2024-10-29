@@ -23,8 +23,6 @@ namespace Scoreboard
                     return null;
                 }
 
-
-
                 string jsonData = File.ReadAllText(BackupPath);
                 GameEventArgs gameState = JsonSerializer.Deserialize<GameEventArgs>(jsonData)!;
                 Console.WriteLine("Laddning av tidigare matchdata lyckades.");
