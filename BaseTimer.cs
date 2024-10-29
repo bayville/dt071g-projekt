@@ -7,6 +7,7 @@ namespace Scoreboard
         public TimeSpan TimerLength { get; private set; }
         public string Mode {get; set;} = "Game Time";
         protected DateTime startTime;
+        public TimeSpan TimeElapsed { get; private set; }
         private readonly int Interval;
         private CancellationTokenSource? cancellationTokenSource;
         public bool CountDown {get; private set;}
@@ -67,10 +68,11 @@ namespace Scoreboard
         protected virtual void UpdateTime()
         {
             var now = DateTime.Now;
-            var timeElapsed = now - startTime;
+            TimeElapsed = now - startTime;
             startTime = now;
 
-            CurrentTime = CountDown ? CurrentTime - timeElapsed : CurrentTime + timeElapsed;
+
+            CurrentTime = CountDown ? CurrentTime - TimeElapsed : CurrentTime + TimeElapsed;
         }
 
         protected virtual bool ShouldStop()

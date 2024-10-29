@@ -3,12 +3,14 @@ namespace Scoreboard
     public class GameClock
     {
         private GameTimer _gameTimer;
+        private GamePenalties _gamePenalties;
         public BaseTimer ActiveTimer {get; private set;}
 
-        public GameClock(GameSettings settings)
+        public GameClock(GameSettings settings, GamePenalties gamePenalties)
         {
-            _gameTimer = new GameTimer(settings.PeriodLength, settings.CountDown);
+            _gameTimer = new GameTimer(settings.PeriodLength, gamePenalties, settings.CountDown);
             ActiveTimer = _gameTimer;
+            _gamePenalties = gamePenalties;
         }
         public void ActivateTimeOut()
         {
@@ -28,9 +30,9 @@ namespace Scoreboard
             ActiveTimer = _gameTimer;
         }
 
-        public void NewPeriodTimer(TimeSpan periodLength, bool countDown)
+        public void NewPeriodTimer(TimeSpan periodLength, GamePenalties gamePenalites, bool countDown)
         {
-            ActiveTimer = new GameTimer(periodLength, countDown);
+            ActiveTimer = new GameTimer(periodLength, gamePenalites, countDown);
         }
 
         public void SetCurrentTime(TimeSpan currentTime)

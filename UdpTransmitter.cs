@@ -32,7 +32,7 @@ namespace Scoreboard
             {
                 byte[] data = Encoding.UTF8.GetBytes(jsonData);
                 UdpSender.Send(data, data.Length, new IPEndPoint(MulticastAddress, MulticastPort));
-                Console.WriteLine("Data sent via multicast: " + jsonData);
+                // Console.WriteLine("Data sent via multicast: " + jsonData);
             }
             catch (Exception ex)
             {

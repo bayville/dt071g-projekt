@@ -27,6 +27,7 @@ namespace Scoreboard
             // New instance of UdpTransmitter
             _ = new UdpTransmitter(jsonSerializer);
 
+            game.Update();
             // Listen for keypresses in controller runs as a task
             await controller.ListenToKeyPress();
         }

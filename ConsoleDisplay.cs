@@ -2,8 +2,13 @@ namespace Scoreboard
 {
     public class ConsoleDisplay
     {
+        private Game _game;
+        private GamePenalties _gamePenalties;
+        
         public ConsoleDisplay(Game game)
         {
+            _game = game;
+            _gamePenalties = game.gamePenalties;
             game.UpdateGame += (sender, data) => UpdateDisplay(data);
         }
 
@@ -16,6 +21,14 @@ namespace Scoreboard
             Console.WriteLine("\n\tRESULTAT");
             Console.WriteLine("H\t\tA");
             Console.WriteLine($"{data.HomeScore}\t\t{data.AwayScore}");
+            Console.WriteLine("\n\nHome Penalties:");
+            Console.WriteLine("NR\tTime");
+            Console.WriteLine($"{data.HomePenalty1.PlayerNumber}\t{data.HomePenalty1.RemainingTime}");
+            Console.WriteLine($"{data.HomePenalty2.PlayerNumber}\t{data.HomePenalty2.RemainingTime}");
+
+            _gamePenalties.ListAllPenalties();
+
+            
             Console.WriteLine("\nKONTROLLER:\n");
             Console.WriteLine("S - Start | P - Paus");
             Console.WriteLine("\nH - Hemma mål + | G - Borta mål + | Håll ned Shift för att minska målet");

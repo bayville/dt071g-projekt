@@ -16,7 +16,7 @@ namespace Scoreboard
             try
             {
                 string jsonString = JsonSerializer.Serialize(data);
-                Console.WriteLine(jsonString);
+                // Console.WriteLine(jsonString);
                 await Task.Run(() => DataSerialized?.Invoke(this, jsonString));
             }
             catch (Exception e)
