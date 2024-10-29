@@ -5,11 +5,11 @@ namespace Scoreboard
         public TimeSpan CurrentTime { get; protected set; }
         public bool IsRunning { get; private set; }
         public TimeSpan TimerLength { get; private set; }
-        public string? Mode {get; set;}
+        public string Mode {get; set;} = "Game Time";
         protected DateTime startTime;
         private readonly int Interval;
         private CancellationTokenSource? cancellationTokenSource;
-        public  bool CountDown {get; private set;}
+        public bool CountDown {get; private set;}
         public event EventHandler? TimerUpdated;
         public event EventHandler? TimerStopped;
         public event EventHandler? TimerEnded;
@@ -58,7 +58,7 @@ namespace Scoreboard
             OnTimerUpdated();
         }
 
-        public void UpdateCurrentTime(TimeSpan currentTime)
+        public void SetCurrentTime(TimeSpan currentTime)
         {
             CurrentTime = currentTime;
             OnTimerUpdated();

@@ -4,7 +4,7 @@ namespace Scoreboard
     {
         public TimeSpan PeriodLength { get; private set; }
         public int CurrentPeriod { get; private set; }
-        public GameTimer(TimeSpan periodLength, bool countDown)
+        public GameTimer(TimeSpan periodLength,  bool countDown)
             :base(countDown, periodLength, 50)
         {
             PeriodLength = periodLength;

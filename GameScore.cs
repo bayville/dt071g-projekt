@@ -1,6 +1,6 @@
 namespace Scoreboard
 {
-    public class GameScore
+    public class GameScore()
     {
         public int HomeScore {get; private set;}
         public int AwayScore {get; private set;}
@@ -28,6 +28,12 @@ namespace Scoreboard
         {
              AwayScore = Math.Max(0, AwayScore - 1);
         }
+    }
+
+    public void SetScore(int homeScore, int awayScore)
+    {
+        HomeScore = homeScore;
+        AwayScore = awayScore;
     }
 
     }

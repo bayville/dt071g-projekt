@@ -3,22 +3,28 @@ namespace Scoreboard
 {
     public static class StartUpDialog
     {
-
-        public static GameSettings Start()
+        public static (GameSettings gameSettings, bool isRestore, GameEventArgs? restoreData) Start(GameEventArgs? savedState)
         {
-            Console.WriteLine("Återställ senaste matchen? y/n");
-            bool restore = Confirm();
+            bool isRestore = false;
+            GameSettings gameSettings;
 
-            if (restore)
+            if (savedState != null)
             {
-                Console.WriteLine("Återställ tidigare match");
-                return GameSettingsManager.GetGameSettings();
+                Console.WriteLine("Återställ senaste matchen? y/n");
+                bool restore = Confirm();
+
+                if (restore)
+                {
+                    Console.WriteLine("Återställ tidigare match");
+                    isRestore = true;
+                    gameSettings = savedState.GameSettings;
+                    return (gameSettings, isRestore, savedState);
+                }
             }
-            else
-            {
-                Console.WriteLine("Starta ny match");
-                return GameSettingsManager.GetGameSettings();
-            }
+
+            Console.WriteLine("Starta ny match");
+            gameSettings = GameSettingsManager.GetGameSettings();
+            return (gameSettings, isRestore, null);
         }
 
         private static bool Confirm()

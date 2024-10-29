@@ -79,6 +79,8 @@ namespace Scoreboard
         }
 
 
+
+
         private static string FormatDisplayTime(TimeSpan time)
         {
             if (time.TotalMinutes >= 1)

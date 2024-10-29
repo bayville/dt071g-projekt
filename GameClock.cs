@@ -2,52 +2,56 @@ namespace Scoreboard
 {
     public class GameClock
     {
-        private GameTimer gameTimer;
-        public BaseTimer activeTimer {get; private set;}
-        private readonly GameSettings Settings;
+        private GameTimer _gameTimer;
+        public BaseTimer ActiveTimer {get; private set;}
+
         public GameClock(GameSettings settings)
         {
-            Settings = settings;
-            gameTimer = new GameTimer(settings.PeriodLength, settings.CountDown);
-            activeTimer = gameTimer;
+            _gameTimer = new GameTimer(settings.PeriodLength, settings.CountDown);
+            ActiveTimer = _gameTimer;
         }
         public void ActivateTimeOut()
         {
             StopActiveClock();
-            activeTimer = new TimeOutTimer(TimeSpan.FromSeconds(30));
+            ActiveTimer = new TimeOutTimer(TimeSpan.FromSeconds(30));
         }
 
         public void ActivateIntermission()
         {
             StopActiveClock();
-            activeTimer = new IntermissionTimer(TimeSpan.FromMinutes(18));
+            ActiveTimer = new IntermissionTimer(TimeSpan.FromMinutes(18));
         }
 
         public void ActivateGameTime()
         {
             StopActiveClock();
-            activeTimer = gameTimer;
+            ActiveTimer = _gameTimer;
         }
 
         public void NewPeriodTimer(TimeSpan periodLength, bool countDown)
         {
-            activeTimer = new GameTimer(periodLength, countDown);
+            ActiveTimer = new GameTimer(periodLength, countDown);
+        }
+
+        public void SetCurrentTime(TimeSpan currentTime)
+        {
+            ActiveTimer.SetCurrentTime(currentTime);
         }
    
         
         public void StartActiveClock()
         {
-            _ = activeTimer.StartClockAsync();
+            _ = ActiveTimer.StartClockAsync();
         }
 
         public void StopActiveClock()
         {
-            activeTimer.Stop();
+            ActiveTimer.Stop();
         }
 
         public void AdjustActiveClockTime(TimeSpan timeAdjustment)
         {
-            activeTimer.AdjustTime(timeAdjustment);
+            ActiveTimer.AdjustTime(timeAdjustment);
         }
     }
 

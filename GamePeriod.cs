@@ -5,16 +5,16 @@ public class GamePeriod
     public int NumberOfPeriods { get; private set; }
     public int CurrentPeriod { get; private set; }
     public bool IsOvertime { get; private set; }
-    private TimeSpan regularPeriodLength;
-    private TimeSpan overtimePeriodLength;
+    private TimeSpan _regularPeriodLength;
+    private TimeSpan _overtimePeriodLength;
 
     public GamePeriod(GameSettings settings)
     {
         NumberOfPeriods = settings.NumberOfPeriods;
         CurrentPeriod = 1;
         IsOvertime = false;
-        regularPeriodLength = settings.PeriodLength;
-        overtimePeriodLength = settings.OvertimePeriodLength;
+        _regularPeriodLength = settings.PeriodLength;
+        _overtimePeriodLength = settings.OvertimePeriodLength;
     }
 
     public void IncrementPeriod()
@@ -31,7 +31,12 @@ public class GamePeriod
 
     public TimeSpan GetPeriodLength()
     {
-        return IsOvertime ? overtimePeriodLength : regularPeriodLength;
+        return IsOvertime ? _overtimePeriodLength : _regularPeriodLength;
+    }
+
+    public void SetCurrentPeriod(int currentPeriod)
+    {
+        CurrentPeriod = currentPeriod;
     }
 
     private void CheckIfOvertime()

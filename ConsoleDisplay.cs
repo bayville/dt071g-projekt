@@ -10,12 +10,12 @@ namespace Scoreboard
         public void UpdateDisplay(GameEventArgs data)
         {
             Console.Clear();
-            Console.WriteLine(data.GameClock.activeTimer.Mode);
-            Console.WriteLine($"Period: {data.GamePeriod.CurrentPeriod}");
-            Console.WriteLine(FormatDisplayTime(data.GameClock.activeTimer.CurrentTime));
+            Console.WriteLine(data.GameMode);
+            Console.WriteLine($"Period: {data.CurrentPeriod}");
+            Console.WriteLine(FormatDisplayTime(data.CurrentTime));
             Console.WriteLine("\n\tRESULTAT");
             Console.WriteLine("H\t\tA");
-            Console.WriteLine($"{data.GameScore.HomeScore}\t\t{data.GameScore.AwayScore}");
+            Console.WriteLine($"{data.HomeScore}\t\t{data.AwayScore}");
             Console.WriteLine("\nKONTROLLER:\n");
             Console.WriteLine("S - Start | P - Paus");
             Console.WriteLine("\nH - Hemma mål + | G - Borta mål + | Håll ned Shift för att minska målet");
@@ -24,7 +24,7 @@ namespace Scoreboard
             Console.WriteLine("\nI - Aktivera Intervall-läge | T - Aktivera Timeout-läge | B - Aktivera pausläge\n\n");
 
 
-            if (!data.GameClock.activeTimer.IsRunning)
+            if (!data.IsRunning)
             {
                 Console.WriteLine("Klockan stoppad!");
             }
