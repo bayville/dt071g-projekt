@@ -9,11 +9,12 @@ namespace Scoreboard
 
             if (savedState != null)
             {
-                Console.WriteLine("\nÅterställ senaste matchen? y/n");
-                bool restore = Confirm();
+                Console.WriteLine("\nÅterställ senaste matchen?");
+                (bool restore, _ ) = ConsoleDialogs.Confirm(false);
 
                 if (restore)
                 {
+                    Console.Clear();
                     Console.WriteLine("\nÅterställ tidigare match");
                     isRestore = true;
                     gameSettings = savedState.GameSettings;
@@ -21,36 +22,25 @@ namespace Scoreboard
                 }
             }
 
+            Console.Clear();
             Console.WriteLine("\nStarta ny match");
             gameSettings = GameSettingsManager.GetGameSettings();
+
+            Console.WriteLine("\nÄr inställningarna korrekta?");
+        
+            (bool confirm, _) = ConsoleDialogs.Confirm(false);
+
+            while (!confirm)
+            {
+                Console.Clear();
+                gameSettings = GameSettingsManager.GetGameSettings();
+                Console.WriteLine("\nÄr inställningarna korrekta?");
+                (confirm, _) = ConsoleDialogs.Confirm(false);
+            }
+
             return (gameSettings, isRestore, null);
         }
 
-        private static bool Confirm()
-        {
-            
-            var key = Console.ReadKey(true);
-            bool confirmed;
-            switch (key.Key)
-            {
-                case ConsoleKey.Y:
-                    Console.WriteLine("\nJa");
-                    confirmed = true;
-                    break;
-
-                case ConsoleKey.N:
-                    Console.WriteLine("\nNej");
-                    confirmed = false;
-                    break;
-
-                default:
-                    Console.WriteLine("\nFel tangent, välj Y eller N");
-                    Console.WriteLine(key.Key);
-                    confirmed = false;
-                    break;
-            }
-            return confirmed;
-        }
 
     }
 

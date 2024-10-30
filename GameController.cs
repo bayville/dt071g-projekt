@@ -5,12 +5,10 @@ namespace Scoreboard
         private Game game;
         private int team;
         private int index;
-        private int minutes;
+        private bool cancel;
+        private bool success;
+        private bool confirmed;
 
-        private double seconds; 
-        private int intSeconds;
-
-        private int milliseconds; 
         private TimeSpan newPenaltyTime;
 
         public Controller(Game game)
@@ -38,83 +36,150 @@ namespace Scoreboard
                                 game.GameClock.StartActiveClock();
                             }
                             break;
+
                         case ConsoleKey.Q:
-                            Console.WriteLine("Quit");
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                (confirmed, cancel) = ConsoleDialogs.Confirm(false);
+                                if (confirmed)
+                                {
+                                    Console.WriteLine("Quit");
+                                }
+                            }
                             break;
+
                         case ConsoleKey.T:
-                            game.ActivateTimeOut();
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                game.ActivateTimeOut();
+                            }
                             break;
+
                         case ConsoleKey.O:
-                            game.ActivateGameTime();
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                game.ActivateGameTime();
+                            }
                             break;
+
                         case ConsoleKey.P:
-                            game.ActivatePowerbreak();
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                game.ActivatePowerbreak();
+                            }
                             break;
 
                         case ConsoleKey.A:
-                            game.GameClock.StopActiveClock(); ;
-                            Console.WriteLine("Skriv in antal sekunder att justera, sätt '-' framför siffran för att dra tillbaka klockan");
-                            double adjustment = double.Parse(Console.ReadLine());
-                            TimeSpan timeAdjustment = TimeSpan.FromSeconds(adjustment);
-                            game.GameClock.AdjustActiveClockTime(timeAdjustment);
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                Console.WriteLine("Skriv in antal sekunder att justera, sätt '-' framför siffran för att dra tillbaka klockan");
+                                TimeSpan timeAdjustment = ConsoleDialogs.TimeSpanFromSeconds();
+                                game.GameClock.AdjustActiveClockTime(timeAdjustment);
+                            }
+                            break;
+
+                        case ConsoleKey.S:
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                Console.WriteLine("Ändra matchttid");
+                                TimeSpan timeAdjustment = ConsoleDialogs.TimeSpanFromMinutesSeconds();
+                                game.GameClock.SetCurrentTime(timeAdjustment);
+                            }
                             break;
 
                         case ConsoleKey.R:
-                            bool removed = false;
-                            while (!removed)
+                            if (!game.GameClock.ActiveTimer.IsRunning)
                             {
-                                Console.WriteLine("Radera utvisning");
-                                Console.WriteLine("Välj lag att radera utvinsing för:");
-                                team = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Ange index för utvisning [i]");
-                                index = int.Parse(Console.ReadLine());
-                                removed = game.GamePenalties.RemovePenaltyWithIndex(index, team);
+                                bool removed = false;
+                                success = false;
+                                while (!removed)
+                                {
+                                    Console.WriteLine("Radera utvisning");
+                                    (team, cancel) = ConsoleDialogs.ChooseTeam();
+                                    if (cancel)
+                                        break;
+
+                                    Console.WriteLine("Ange index för utvisning [i]");
+                                    while (!success)
+                                    {
+                                        (index, success) = ConvertInput.ConvertToInt();
+                                    }
+
+                                    removed = game.GamePenalties.RemovePenaltyWithIndex(index, team);
+                                }
                             }
                             break;
+
                         case ConsoleKey.M:
                             bool moved = false;
-                            while (!moved)
+                            if (!game.GameClock.ActiveTimer.IsRunning)
                             {
-                                Console.WriteLine("Flytta utvisning till toppen");
-                                Console.WriteLine("Välj lag att flytta utvinsing för:");
-                                team = int.Parse(Console.ReadLine());
-                                Console.WriteLine("Ange index för utvisning [i]");
-                                index = int.Parse(Console.ReadLine());
-                                moved = game.GamePenalties.MovePenaltyToTop(index, team);
+                                while (!moved)
+                                {
+                                    Console.WriteLine("Flytta utvisning till toppen");
+                                    (team, cancel) = ConsoleDialogs.ChooseTeam();
+                                    if (cancel)
+                                        break;
+
+                                    Console.WriteLine("Ange index för utvisning [i]");
+                                    while (!success)
+                                    {
+                                        (index, success) = ConvertInput.ConvertToInt();
+                                    }
+                                    moved = game.GamePenalties.MovePenaltyToTop(index, team);
+                                }
                             }
                             break;
+
                         case ConsoleKey.E:
-                            Console.WriteLine("Ändra tid för utvisning");
-                            Console.WriteLine("Välj lag att ändra utvinsing för:");
-                            team = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Ange index för utvisning [i]");
-                            index = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Ange minuter (ex: 11)");
-                            minutes = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Ange sekunder (ex: 30 | ex2: 20,4)");
-                            seconds = double.Parse(Console.ReadLine());
-                            intSeconds = (int)seconds;
-                            milliseconds = (int)((seconds - intSeconds) * 1000);
-                            newPenaltyTime = new TimeSpan(0, 0, minutes, intSeconds, milliseconds);
-                            game.GamePenalties.SetPenaltyRemainingTime(index, newPenaltyTime, team);
+                            cancel = false;
+                            success = false;
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                Console.WriteLine("Ändra tid för utvisning\n");
+
+                                (team, cancel) = ConsoleDialogs.ChooseTeam();
+                                if (cancel)
+                                    break;
+
+                                Console.WriteLine("Ange index för utvisning [i]");
+                                while (!success)
+                                {
+                                    (index, success) = ConvertInput.ConvertToInt();
+                                }
+
+                                (newPenaltyTime, cancel) = ConsoleDialogs.ChoosePenaltyTime();
+
+                                game.GamePenalties.SetPenaltyRemainingTime(index, newPenaltyTime, team);
+                            }
                             break;
+
                         case ConsoleKey.U:
-                            Console.WriteLine("Lägg till ny utvisning");
-                            Console.WriteLine("Välj lag:");
-                            team = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Ange spelarnummer:");
-                            int playerNumber = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Ange minuter (ex: 11)");
-                            minutes = int.Parse(Console.ReadLine());
-                            Console.WriteLine("Ange sekunder (ex: 30 | ex2: 20,4)");
-                            seconds = double.Parse(Console.ReadLine());
-                            intSeconds = (int)seconds;
-                            milliseconds = (int)((seconds - intSeconds) * 1000);
-                            newPenaltyTime = new TimeSpan(0, 0, minutes, intSeconds, milliseconds);
-                            game.GamePenalties.AddNewPenalty(playerNumber, newPenaltyTime, team);
+
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                Console.WriteLine("Lägg till ny utvisning\n");
+
+                                (team, cancel) = ConsoleDialogs.ChooseTeam();
+                                if (cancel)
+                                    break;
+
+                                int playerNumber = ConsoleDialogs.SetPlayerNumber();
+
+                                (newPenaltyTime, cancel) = ConsoleDialogs.ChoosePenaltyTime();
+                                if (cancel)
+                                    break;
+
+                                game.GamePenalties.AddNewPenalty(playerNumber, newPenaltyTime, team);
+                            }
                             break;
+
+
                         case ConsoleKey.I:
-                            game.ActivateIntermission();
+                            if (!game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                game.ActivateIntermission();
+                            }
                             break;
 
                         case ConsoleKey.H:
@@ -137,21 +202,23 @@ namespace Scoreboard
                             {
                                 game.GameScore.AddGoal(1);
                             }
-
                             break;
 
                         case ConsoleKey.N:
-                            if (input.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                            Console.WriteLine("Ändra period");
+                            (confirmed, cancel) = ConsoleDialogs.Confirm(false);
+                            if (confirmed)
                             {
-                                game.PreviousPeriod();
-                            }
-                            else
-                            {
-                                game.NextPeriod();
+                                if (input.Modifiers.HasFlag(ConsoleModifiers.Shift))
+                                {
+                                    game.PreviousPeriod();
+                                }
+                                else
+                                {
+                                    game.NextPeriod();
+                                }
                             }
                             break;
-
-
 
                         default:
                             Console.WriteLine("Ogiltig tangent. Försök igen.");

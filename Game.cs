@@ -5,7 +5,8 @@ namespace Scoreboard
         public GameClock GameClock { get; private set; }
         public GameScore GameScore { get; private set; }
         public GamePeriod GamePeriod { get; private set; }
-        public GamePenalties GamePenalties { get; private set; }
+        public GamePenalties GamePenalties { get; private set;}
+        public ConsoleDisplay ConsoleDisplay {get; private set;}
         public EventHandler<GameEventArgs>? UpdateGame;
         public GameSettings Settings { get; private set; }
 
@@ -16,6 +17,7 @@ namespace Scoreboard
             GamePeriod = new(settings);
             GamePenalties = new GamePenalties();
             GameClock = new GameClock(settings, GamePenalties);
+            ConsoleDisplay = new ConsoleDisplay(this);
 
             // If isRestore is true, call method to restore game
             if (isRestore && restoreData != null)
@@ -29,7 +31,6 @@ namespace Scoreboard
             GamePeriod.PeriodChanged += OnGameChanged;
             GamePenalties.PenaltyChanged += OnGameChanged;
         }
-
 
         // Timer macros    
         public void ActivateTimeOut()
@@ -50,7 +51,7 @@ namespace Scoreboard
         public void ActivatePowerbreak()
         {
             UnregisterFromUpdates();
-            GameClock.ActivateIntermission();
+            GameClock.ActivatePowerbreak();
             RegisterForUpdates();
             Update();
         }
@@ -135,9 +136,11 @@ namespace Scoreboard
             Update();
         }
 
-        public void Update()
+        public GameEventArgs Update()
         {
-            UpdateGame?.Invoke(this, new GameEventArgs(GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings));
+            GameEventArgs gameEventArgs = new GameEventArgs(GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings);
+            UpdateGame?.Invoke(this, gameEventArgs);
+            return gameEventArgs;
         }
     }
 }

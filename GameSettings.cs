@@ -9,7 +9,7 @@ namespace Scoreboard
         public TimeSpan IntermissionLength {get; private set;}
         public int NumberOfPeriods { get; private set; }
         public bool CountDown {get; private set;}
-        
+
         public GameSettings(TimeSpan periodLength, TimeSpan intermissionLength,  TimeSpan overtimePeriodLength, TimeSpan timeOutLength, TimeSpan powerBreakLength, int numberOfPeriods, bool countDown)
         {
             PeriodLength = periodLength;
@@ -20,6 +20,7 @@ namespace Scoreboard
             PowerbreakLength = powerBreakLength;
             CountDown = countDown;
         }
+
     }
 
 }

@@ -126,7 +126,7 @@ namespace Scoreboard
         // Method to list all penalties in console
         public void ListAllPenalties()
         {
-            Console.WriteLine("Home Penalties:");
+            Console.WriteLine("Hemmautvisningar:");
             for (int i = 0; i < _homePenalties.Count; i++)
             {
                 Console.WriteLine($"[{i}]\t{_homePenalties[i].PlayerNumber}\t{_homePenalties[i].RemainingTime}\t{_homePenalties[i].IsActive}\t{_homePenalties[i].Team}");
@@ -134,7 +134,7 @@ namespace Scoreboard
 
             Console.WriteLine("\n---\n");
 
-            Console.WriteLine("Away penalties");
+            Console.WriteLine("Bortautvisningar");
             for (int i = 0; i < _awayPenalties.Count; i++)
             {
                 Console.WriteLine($"[{i}]\t{_awayPenalties[i].PlayerNumber}\t{_awayPenalties[i].RemainingTime}\t{_awayPenalties[i].IsActive}\t{_awayPenalties[i].Team}");
