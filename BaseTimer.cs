@@ -50,10 +50,10 @@ namespace Scoreboard
         {
             IsRunning = false;
             cancellationTokenSource?.Cancel();
-            OnTimerStopped();
+            OnTimerUpdated();
         }
 
-        public void AdjustTime(TimeSpan adjustment)
+        public virtual void AdjustTime(TimeSpan adjustment)
         {
             CurrentTime += adjustment;
             OnTimerUpdated();

@@ -2,60 +2,40 @@ namespace Scoreboard
 {
     public class Game
     {
-        private GameClock gameClock;
-        private readonly GameScore gameScore;
-        private readonly GamePeriod gamePeriod;
-        public readonly GamePenalties gamePenalties;
+        public GameClock GameClock { get; private set; }
+        public GameScore GameScore { get; private set; }
+        public GamePeriod GamePeriod { get; private set; }
+        public GamePenalties GamePenalties { get; private set; }
         public EventHandler<GameEventArgs>? UpdateGame;
         public GameSettings Settings { get; private set; }
 
         public Game(GameSettings settings, bool isRestore, GameEventArgs? restoreData)
         {
             Settings = settings;
-            gameScore = new();
-            gamePeriod = new(settings);
-            gamePenalties = new GamePenalties();
-            gameClock = new GameClock(settings, gamePenalties);
-            
+            GameScore = new();
+            GamePeriod = new(settings);
+            GamePenalties = new GamePenalties();
+            GameClock = new GameClock(settings, GamePenalties);
+
+            // If isRestore is true, call method to restore game
             if (isRestore && restoreData != null)
             {
                 RestoreGameState(restoreData);
             }
 
+            // Listen for events
             RegisterForUpdates();
+            GameScore.ScoreChanged += OnGameChanged;
+            GamePeriod.PeriodChanged += OnGameChanged;
+            GamePenalties.PenaltyChanged += OnGameChanged;
         }
 
-        private void RegisterForUpdates()
-        {
-            UnregisterFromUpdates();
 
-            gameClock.ActiveTimer.TimerUpdated += OnTimerUpdated;
-            gameClock.ActiveTimer.TimerEnded += OnTimerEnded;
-        }
-
-        private void UnregisterFromUpdates()
-        {
-            if (gameClock.ActiveTimer != null)
-            {
-                gameClock.ActiveTimer.TimerUpdated -= OnTimerUpdated;
-            }
-        }
-
-        private void OnTimerUpdated(object? sender, EventArgs args)
-        {
-            Update();
-        }
-
-        private void OnTimerEnded(object? sender, EventArgs e)
-        {
-            Console.WriteLine(gameClock.ActiveTimer.GetType());
-            ActivateGameTime();
-        }
-
+        // Timer macros    
         public void ActivateTimeOut()
         {
             UnregisterFromUpdates();
-            gameClock.ActivateTimeOut();
+            GameClock.ActivateTimeOut();
             RegisterForUpdates();
             Update();
         }
@@ -63,7 +43,14 @@ namespace Scoreboard
         public void ActivateIntermission()
         {
             UnregisterFromUpdates();
-            gameClock.ActivateIntermission();
+            GameClock.ActivateIntermission();
+            RegisterForUpdates();
+            Update();
+        }
+        public void ActivatePowerbreak()
+        {
+            UnregisterFromUpdates();
+            GameClock.ActivateIntermission();
             RegisterForUpdates();
             Update();
         }
@@ -71,47 +58,20 @@ namespace Scoreboard
         public void ActivateGameTime()
         {
             UnregisterFromUpdates();
-            gameClock.ActivateGameTime();
+            GameClock.ActivateGameTime();
             RegisterForUpdates();
             Update();
         }
 
-        public void Start()
-        {
-            gameClock.StartActiveClock();
-        }
 
-        public void Stop()
-        {
-            gameClock.StopActiveClock();
-            Update();
-        }
-
-        public void AdjustTime(TimeSpan timeAdjustment)
-        {
-            gameClock.AdjustActiveClockTime(timeAdjustment);
-        }
-
-        public void AddGoal(int team)
-        {
-            gameScore.AddGoal(team);
-            Update();
-        }
-
-        public void RemoveGoal(int team)
-        {
-            gameScore.RemoveGoal(team);
-            Update();
-        }
-
+        // Periods macros
         public void NextPeriod()
         {
-
-            gameClock.StopActiveClock();
+            GameClock.StopActiveClock();
             UnregisterFromUpdates();
-            gamePeriod.IncrementPeriod();
-            var periodLength = gamePeriod.GetPeriodLength();
-            gameClock.NewPeriodTimer(periodLength, gamePenalties, Settings.CountDown);
+            GamePeriod.IncrementPeriod();
+            var periodLength = GamePeriod.GetPeriodLength();
+            GameClock.NewPeriodTimer(periodLength, GamePenalties, Settings.CountDown);
 
             RegisterForUpdates();
             Update();
@@ -120,63 +80,64 @@ namespace Scoreboard
         public void PreviousPeriod()
         {
 
-            gameClock.StopActiveClock();
+            GameClock.StopActiveClock();
             UnregisterFromUpdates();
 
-            gamePeriod.DecrementPeriod();
-            var periodLength = gamePeriod.GetPeriodLength();
-            gameClock.NewPeriodTimer(periodLength, gamePenalties, Settings.CountDown);
+            GamePeriod.DecrementPeriod();
+            var periodLength = GamePeriod.GetPeriodLength();
+            GameClock.NewPeriodTimer(periodLength, GamePenalties, Settings.CountDown);
 
             RegisterForUpdates();
             Update();
         }
 
-        private void SetScore(int homeScore, int awayScore)
-        {
-            gameScore.SetScore(homeScore, awayScore);
-        }
-
-        private void SetCurrentPeriod(int currentPeriod)
-        {
-            gamePeriod.SetCurrentPeriod(currentPeriod);
-        }
-
-        private void SetCurrentTime(TimeSpan currentTime)
-        {
-            gameClock.SetCurrentTime(currentTime);
-        }
-
-
-        public void AddNewPenalty(int team)
-        {
-            Random rnd = new Random();
-            int num = rnd.Next(99);
-            gamePenalties.AddNewPenalty(num, TimeSpan.FromMinutes(2), team);
-            Update();
-        }
-
-        public void SetPenaltyRemainingTime()
-        {
-            gamePenalties.SetPenaltyRemainingTime(0, 0, TimeSpan.Zero);
-            Update();
-        }
-
-        public void RemoveFinishedPenalties()
-        {
-            gamePenalties.Update();
-            Update();
-        }
+        // Restore previous game
         private void RestoreGameState(GameEventArgs restoreData)
         {
-            SetScore(restoreData.HomeScore, restoreData.AwayScore);
-            SetCurrentPeriod(restoreData.CurrentPeriod);
-            SetCurrentTime(restoreData.CurrentTime);
-            gamePenalties.RestorePenaltyLists(restoreData.HomePenalties, restoreData.AwayPenalties);
+            GameScore.SetScore(restoreData.HomeScore, restoreData.AwayScore);
+            GamePeriod.SetCurrentPeriod(restoreData.CurrentPeriod);
+            GameClock.SetCurrentTime(restoreData.CurrentTime);
+            GamePenalties.RestorePenaltyLists(restoreData.HomePenalties, restoreData.AwayPenalties);
+        }
+
+        // Events
+        private void RegisterForUpdates()
+        {
+            UnregisterFromUpdates();
+
+            GameClock.ActiveTimer.TimerUpdated += OnTimerUpdated;
+            GameClock.ActiveTimer.TimerEnded += OnTimerEnded;
+        }
+
+        private void UnregisterFromUpdates()
+        {
+            if (GameClock.ActiveTimer != null)
+            {
+                GameClock.ActiveTimer.TimerUpdated -= OnTimerUpdated;
+            }
+        }
+
+        private void OnTimerUpdated(object? sender, EventArgs args)
+        {
+            Update();
+        }
+
+
+        private void OnTimerEnded(object? sender, EventArgs e)
+        {
+            Console.WriteLine(GameClock.ActiveTimer.GetType());
+            // --- Play GameHorn --- (Implement class) 
+            ActivateGameTime();
+        }
+
+        private void OnGameChanged(object? sender, EventArgs e)
+        {
+            Update();
         }
 
         public void Update()
         {
-            UpdateGame?.Invoke(this, new GameEventArgs(gameClock.ActiveTimer.CurrentTime, gameClock.ActiveTimer.Mode, gameClock.ActiveTimer.IsRunning, gamePenalties._homePenalties, gamePenalties._awayPenalties, gameScore.HomeScore, gameScore.AwayScore, gamePeriod.CurrentPeriod, gamePeriod.IsOvertime, Settings));
+            UpdateGame?.Invoke(this, new GameEventArgs(GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings));
         }
     }
 }

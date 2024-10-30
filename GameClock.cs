@@ -3,31 +3,36 @@ namespace Scoreboard
     public class GameClock
     {
         private GameTimer _gameTimer;
-        private GamePenalties _gamePenalties;
+        private GameSettings _gameSettings;
         public BaseTimer ActiveTimer {get; private set;}
 
         public GameClock(GameSettings settings, GamePenalties gamePenalties)
         {
             _gameTimer = new GameTimer(settings.PeriodLength, gamePenalties, settings.CountDown);
             ActiveTimer = _gameTimer;
-            _gamePenalties = gamePenalties;
+            _gameSettings = settings;
         }
         public void ActivateTimeOut()
         {
             StopActiveClock();
-            ActiveTimer = new TimeOutTimer(TimeSpan.FromSeconds(30));
+            ActiveTimer = new TimeOutTimer(_gameSettings.TimeOutLength);
         }
 
         public void ActivateIntermission()
         {
             StopActiveClock();
-            ActiveTimer = new IntermissionTimer(TimeSpan.FromMinutes(18));
+            ActiveTimer = new IntermissionTimer(_gameSettings.IntermissionLength);
         }
 
         public void ActivateGameTime()
         {
             StopActiveClock();
             ActiveTimer = _gameTimer;
+        }
+        public void ActivatePowerbreak()
+        {
+            StopActiveClock();
+            ActiveTimer = new PowerbreakTimer(_gameSettings.PowerbreakLength);
         }
 
         public void NewPeriodTimer(TimeSpan periodLength, GamePenalties gamePenalites, bool countDown)

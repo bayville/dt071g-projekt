@@ -22,6 +22,34 @@ namespace Scoreboard
             AwayPenalty2 = _penalties.AwayPenalty2;
         }
 
+        public override void AdjustTime(TimeSpan adjustment)
+        {
+            if (CountDown) 
+            {
+                CurrentTime -= adjustment;
+            }
+            else
+            {
+                CurrentTime += adjustment;
+            }
+            
+
+            HomePenalty1 = _penalties.HomePenalty1;
+            HomePenalty2 = _penalties.HomePenalty2;
+            AwayPenalty1 = _penalties.AwayPenalty1;
+            AwayPenalty2 = _penalties.AwayPenalty2;
+
+            AdjustPenaltyTimers(HomePenalty1, HomePenalty2, adjustment);
+            AdjustPenaltyTimers(AwayPenalty1, AwayPenalty2, adjustment);
+
+            OnTimerUpdated();
+        }
+
+        // public virtual void AdjustTime(TimeSpan adjustment)
+        // {
+        //     CurrentTime += adjustment;
+        //     OnTimerUpdated();
+        // }
 
         protected override void UpdateTime()
         {
@@ -31,24 +59,25 @@ namespace Scoreboard
             HomePenalty2 = _penalties.HomePenalty2;
             AwayPenalty1 = _penalties.AwayPenalty1;
             AwayPenalty2 = _penalties.AwayPenalty2;
-            AdjustPenaltyTimers(HomePenalty1, HomePenalty2);
-            AdjustPenaltyTimers(AwayPenalty1, AwayPenalty2);
+            AdjustPenaltyTimers(HomePenalty1, HomePenalty2, TimeElapsed);
+            AdjustPenaltyTimers(AwayPenalty1, AwayPenalty2, TimeElapsed);
 
             _penalties.Update();
 
         }
 
-        private void AdjustPenaltyTimers(Penalty penalty1, Penalty penalty2)
+        private void AdjustPenaltyTimers(Penalty penalty1, Penalty penalty2, TimeSpan adjustment)
         {
+            
             if (penalty1.RemainingTime > TimeSpan.Zero)
             {
-                penalty1.RemainingTime -= TimeElapsed;
+                penalty1.RemainingTime -= adjustment;
             }
 
 
             if (penalty2.RemainingTime > TimeSpan.Zero)
             {
-                penalty2.RemainingTime -= TimeElapsed;
+                penalty2.RemainingTime -= adjustment;
             }
         }
     }

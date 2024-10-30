@@ -8,7 +8,7 @@ namespace Scoreboard
         public ConsoleDisplay(Game game)
         {
             _game = game;
-            _gamePenalties = game.gamePenalties;
+            _gamePenalties = game.GamePenalties;
             game.UpdateGame += (sender, data) => UpdateDisplay(data);
         }
 
@@ -26,9 +26,9 @@ namespace Scoreboard
 
             
             Console.WriteLine("\nKONTROLLER:\n");
-            Console.WriteLine("S - Start | P - Paus");
+            Console.WriteLine("Spacebar = Starta/Stoppa tid");
             Console.WriteLine("\nH - Hemma mål + | G - Borta mål + | Håll ned Shift för att minska målet");
-            Console.WriteLine("\nA - Justera tid i sekunder | '-' före tiden för att justera tiden med negativt värde.");
+            Console.WriteLine("\nA - Justera tid i sekunder | '-' före tiden för att dra tillbaka klockan.");
             Console.WriteLine("\nN - Ny period | Håll ned Shift för att gå tillbaka en period");
             Console.WriteLine("\nI - Aktivera Intervall-läge | T - Aktivera Timeout-läge | B - Aktivera pausläge\n\n");
 

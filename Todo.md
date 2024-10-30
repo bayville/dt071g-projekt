@@ -41,7 +41,7 @@
 ---
 ### Start Up dialog - Set / Get settings
 - ~~Restore previous game~~
-- Add active penalties to restore
+- ~~Add active penalties to restore~~
 - Set/Get settings
 ---
 
@@ -74,16 +74,20 @@
     - TimerEnd sound
 
 
+Current Todo:
+
+
+
 
 ---
-Lägga till fler metoder för utvisningar (Ändra tid, ändra nummer, ta bort, lägg till ny dialog)
-Justera så utv-tid justeras med tidsjustering
-Lägg till Utvisningar i återställning
+~~Lägga till fler metoder för utvisningar (Ändra tid, ta bort, lägg till ny dialog)~~
+~~Justera så utv-tid justeras med tidsjustering
+~~~~Lägg till Utvisningar i återställning~~
 
 Kontroller:
 Se över vilka knappar som är mest logiska
 Bygga dialogträd
-Spacebar = toggle
+~~Spacebar = toggle~~
 
 Dialoger:
 Nya settings

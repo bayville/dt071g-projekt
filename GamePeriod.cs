@@ -7,6 +7,7 @@ public class GamePeriod
     public bool IsOvertime { get; private set; }
     private TimeSpan _regularPeriodLength;
     private TimeSpan _overtimePeriodLength;
+    public EventHandler? PeriodChanged;
 
     public GamePeriod(GameSettings settings)
     {
@@ -25,7 +26,7 @@ public class GamePeriod
 
     public void DecrementPeriod()
     {
-        CurrentPeriod = Math.Max(0, CurrentPeriod - 1);
+        CurrentPeriod = Math.Max(1, CurrentPeriod - 1);
         CheckIfOvertime();
     }
 
@@ -37,10 +38,17 @@ public class GamePeriod
     public void SetCurrentPeriod(int currentPeriod)
     {
         CurrentPeriod = currentPeriod;
+        CheckIfOvertime();
     }
 
     private void CheckIfOvertime()
     {
         IsOvertime = CurrentPeriod > NumberOfPeriods;
+        Update();
+    }
+
+    public void Update()
+    {
+        PeriodChanged?.Invoke(this, new EventArgs());
     }
 }

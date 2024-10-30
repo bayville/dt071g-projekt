@@ -2,7 +2,16 @@ namespace Scoreboard
 {
     public class Controller
     {
-        private readonly Game game;
+        private Game game;
+        private int team;
+        private int index;
+        private int minutes;
+
+        private double seconds; 
+        private int intSeconds;
+
+        private int milliseconds; 
+        private TimeSpan newPenaltyTime;
 
         public Controller(Game game)
         {
@@ -19,14 +28,16 @@ namespace Scoreboard
 
                     switch (input.Key)
                     {
-                        case ConsoleKey.S:
-                            game.Start();
+                        case ConsoleKey.Spacebar:
+                            if (game.GameClock.ActiveTimer.IsRunning)
+                            {
+                                game.GameClock.StopActiveClock();
+                            }
+                            else
+                            {
+                                game.GameClock.StartActiveClock();
+                            }
                             break;
-
-                        case ConsoleKey.P:
-                            game.Stop();
-                            break;
-
                         case ConsoleKey.Q:
                             Console.WriteLine("Quit");
                             break;
@@ -36,15 +47,72 @@ namespace Scoreboard
                         case ConsoleKey.O:
                             game.ActivateGameTime();
                             break;
+                        case ConsoleKey.P:
+                            game.ActivatePowerbreak();
+                            break;
 
                         case ConsoleKey.A:
-                            game.Stop();
-                            Console.WriteLine("Skriv in antal sekunder att justera, sätt '-' framför siffran för att ange negativt värde");
+                            game.GameClock.StopActiveClock(); ;
+                            Console.WriteLine("Skriv in antal sekunder att justera, sätt '-' framför siffran för att dra tillbaka klockan");
                             double adjustment = double.Parse(Console.ReadLine());
                             TimeSpan timeAdjustment = TimeSpan.FromSeconds(adjustment);
-                            game.AdjustTime(timeAdjustment);
+                            game.GameClock.AdjustActiveClockTime(timeAdjustment);
                             break;
-                        
+
+                        case ConsoleKey.R:
+                            bool removed = false;
+                            while (!removed)
+                            {
+                                Console.WriteLine("Radera utvisning");
+                                Console.WriteLine("Välj lag att radera utvinsing för:");
+                                team = int.Parse(Console.ReadLine());
+                                Console.WriteLine("Ange index för utvisning [i]");
+                                index = int.Parse(Console.ReadLine());
+                                removed = game.GamePenalties.RemovePenaltyWithIndex(index, team);
+                            }
+                            break;
+                        case ConsoleKey.M:
+                            bool moved = false;
+                            while (!moved)
+                            {
+                                Console.WriteLine("Flytta utvisning till toppen");
+                                Console.WriteLine("Välj lag att flytta utvinsing för:");
+                                team = int.Parse(Console.ReadLine());
+                                Console.WriteLine("Ange index för utvisning [i]");
+                                index = int.Parse(Console.ReadLine());
+                                moved = game.GamePenalties.MovePenaltyToTop(index, team);
+                            }
+                            break;
+                        case ConsoleKey.E:
+                            Console.WriteLine("Ändra tid för utvisning");
+                            Console.WriteLine("Välj lag att ändra utvinsing för:");
+                            team = int.Parse(Console.ReadLine());
+                            Console.WriteLine("Ange index för utvisning [i]");
+                            index = int.Parse(Console.ReadLine());
+                            Console.WriteLine("Ange minuter (ex: 11)");
+                            minutes = int.Parse(Console.ReadLine());
+                            Console.WriteLine("Ange sekunder (ex: 30 | ex2: 20,4)");
+                            seconds = double.Parse(Console.ReadLine());
+                            intSeconds = (int)seconds;
+                            milliseconds = (int)((seconds - intSeconds) * 1000);
+                            newPenaltyTime = new TimeSpan(0, 0, minutes, intSeconds, milliseconds);
+                            game.GamePenalties.SetPenaltyRemainingTime(index, newPenaltyTime, team);
+                            break;
+                        case ConsoleKey.U:
+                            Console.WriteLine("Lägg till ny utvisning");
+                            Console.WriteLine("Välj lag:");
+                            team = int.Parse(Console.ReadLine());
+                            Console.WriteLine("Ange spelarnummer:");
+                            int playerNumber = int.Parse(Console.ReadLine());
+                            Console.WriteLine("Ange minuter (ex: 11)");
+                            minutes = int.Parse(Console.ReadLine());
+                            Console.WriteLine("Ange sekunder (ex: 30 | ex2: 20,4)");
+                            seconds = double.Parse(Console.ReadLine());
+                            intSeconds = (int)seconds;
+                            milliseconds = (int)((seconds - intSeconds) * 1000);
+                            newPenaltyTime = new TimeSpan(0, 0, minutes, intSeconds, milliseconds);
+                            game.GamePenalties.AddNewPenalty(playerNumber, newPenaltyTime, team);
+                            break;
                         case ConsoleKey.I:
                             game.ActivateIntermission();
                             break;
@@ -52,22 +120,22 @@ namespace Scoreboard
                         case ConsoleKey.H:
                             if (input.Modifiers.HasFlag(ConsoleModifiers.Shift))
                             {
-                                game.RemoveGoal(0);
+                                game.GameScore.RemoveGoal(0);
                             }
                             else
                             {
-                                game.AddGoal(0);
+                                game.GameScore.AddGoal(0);
                             }
                             break;
 
                         case ConsoleKey.G:
                             if (input.Modifiers.HasFlag(ConsoleModifiers.Shift))
                             {
-                                game.RemoveGoal(1);
+                                game.GameScore.RemoveGoal(1);
                             }
                             else
                             {
-                                game.AddGoal(1);
+                                game.GameScore.AddGoal(1);
                             }
 
                             break;
@@ -82,20 +150,8 @@ namespace Scoreboard
                                 game.NextPeriod();
                             }
                             break;
-                        case ConsoleKey.U:
-                            game.AddNewPenalty(0);
-                            break;
-                        case ConsoleKey.D9:
-                            game.AddNewPenalty(1);
-                            break;
 
-                        case ConsoleKey.D0:
-                            game.SetPenaltyRemainingTime();
-                            break;
-                        
-                        case ConsoleKey.D5:
-                            game.RemoveFinishedPenalties();
-                            break;
+
 
                         default:
                             Console.WriteLine("Ogiltig tangent. Försök igen.");
