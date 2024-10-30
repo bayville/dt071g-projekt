@@ -29,21 +29,27 @@ namespace Scoreboard
 
             HomePenalty1 = _penalties.HomePenalty1;
             HomePenalty2 = _penalties.HomePenalty2;
+            AwayPenalty1 = _penalties.AwayPenalty1;
+            AwayPenalty2 = _penalties.AwayPenalty2;
+            AdjustPenaltyTimers(HomePenalty1, HomePenalty2);
+            AdjustPenaltyTimers(AwayPenalty1, AwayPenalty2);
 
-            Console.WriteLine(TimeElapsed);
-            if (HomePenalty1.RemainingTime > TimeSpan.Zero)
+            _penalties.Update();
+
+        }
+
+        private void AdjustPenaltyTimers(Penalty penalty1, Penalty penalty2)
+        {
+            if (penalty1.RemainingTime > TimeSpan.Zero)
             {
-                HomePenalty1.RemainingTime -= TimeElapsed;
+                penalty1.RemainingTime -= TimeElapsed;
             }
 
 
-            if (HomePenalty2.RemainingTime > TimeSpan.Zero)
+            if (penalty2.RemainingTime > TimeSpan.Zero)
             {
-                HomePenalty2.RemainingTime -= TimeElapsed;
+                penalty2.RemainingTime -= TimeElapsed;
             }
-
-            _penalties.RemoveFinishedPenalties();
-
         }
     }
 }

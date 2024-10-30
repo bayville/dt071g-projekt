@@ -33,7 +33,6 @@ namespace Scoreboard
                 Console.WriteLine($"Failed to load game state: {ex.Message}");
                 Console.WriteLine($"Stack Trace: {ex.StackTrace}");
 
-                // Om det finns inre undantag, logga dem också
                 if (ex.InnerException != null)
                 {
                     Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");

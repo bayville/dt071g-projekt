@@ -5,7 +5,7 @@ namespace Scoreboard
 
         public static GameSettings GetGameSettings()
         {
-            Console.WriteLine("Välj en förinställd inställning eller anpassa dina egna:");
+            Console.WriteLine("\n\nVälj en förinställd inställning eller anpassa dina egna:");
             Console.WriteLine("1. Seniormatch");
             Console.WriteLine("2. Seniormatch slutspel");
             Console.WriteLine("3. Ungdomsmatch");

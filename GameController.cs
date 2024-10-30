@@ -10,8 +10,6 @@ namespace Scoreboard
         }
         public async Task ListenToKeyPress()
         {
-            // Console.WriteLine("\nCONTROLS:\n");
-            // Console.WriteLine("S to start\nP to pause\nQ to quit\nA to adjust time\nN for new period\n");
 
             await Task.Run(() =>
             {
@@ -85,7 +83,10 @@ namespace Scoreboard
                             }
                             break;
                         case ConsoleKey.U:
-                            game.AddNewPenalty();
+                            game.AddNewPenalty(0);
+                            break;
+                        case ConsoleKey.D9:
+                            game.AddNewPenalty(1);
                             break;
 
                         case ConsoleKey.D0:

@@ -147,21 +147,23 @@ namespace Scoreboard
         }
 
 
-        public void AddNewPenalty()
+        public void AddNewPenalty(int team)
         {
-            gamePenalties.AddNewPenalty(12, TimeSpan.FromMinutes(2), 0);
+            Random rnd = new Random();
+            int num = rnd.Next(99);
+            gamePenalties.AddNewPenalty(num, TimeSpan.FromMinutes(2), team);
             Update();
         }
 
         public void SetPenaltyRemainingTime()
         {
-            gamePenalties.SetPenaltyRemainingTime(0, TimeSpan.Zero);
+            gamePenalties.SetPenaltyRemainingTime(0, 0, TimeSpan.Zero);
             Update();
         }
 
         public void RemoveFinishedPenalties()
         {
-            gamePenalties.RemoveFinishedPenalties();
+            gamePenalties.Update();
             Update();
         }
         private void RestoreGameState(GameEventArgs restoreData)
@@ -169,11 +171,12 @@ namespace Scoreboard
             SetScore(restoreData.HomeScore, restoreData.AwayScore);
             SetCurrentPeriod(restoreData.CurrentPeriod);
             SetCurrentTime(restoreData.CurrentTime);
+            gamePenalties.RestorePenaltyLists(restoreData.HomePenalties, restoreData.AwayPenalties);
         }
 
         public void Update()
         {
-            UpdateGame?.Invoke(this, new GameEventArgs(gameClock.ActiveTimer.CurrentTime, gameClock.ActiveTimer.Mode, gameClock.ActiveTimer.IsRunning, gamePenalties.HomePenalty1, gamePenalties.HomePenalty2, gamePenalties.AwayPenalty1, gamePenalties.AwayPenalty2, gameScore.HomeScore, gameScore.AwayScore, gamePeriod.CurrentPeriod, gamePeriod.IsOvertime, Settings));
+            UpdateGame?.Invoke(this, new GameEventArgs(gameClock.ActiveTimer.CurrentTime, gameClock.ActiveTimer.Mode, gameClock.ActiveTimer.IsRunning, gamePenalties._homePenalties, gamePenalties._awayPenalties, gameScore.HomeScore, gameScore.AwayScore, gamePeriod.CurrentPeriod, gamePeriod.IsOvertime, Settings));
         }
     }
 }
