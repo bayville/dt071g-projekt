@@ -62,6 +62,14 @@ namespace Scoreboard
         public void SetCurrentTime(TimeSpan currentTime)
         {
             CurrentTime = currentTime;
+            if (CurrentTime > TimerLength)
+            {
+                CurrentTime = TimerLength;
+            }
+            else if (CurrentTime <= TimeSpan.Zero)
+            {
+                CurrentTime = TimeSpan.Zero;
+            }
             OnTimerUpdated();
         }
 

@@ -40,10 +40,12 @@ namespace Scoreboard
                         case ConsoleKey.Q:
                             if (!game.GameClock.ActiveTimer.IsRunning)
                             {
+                                Console.WriteLine("Vill du avsluta programmet?");
                                 (confirmed, cancel) = ConsoleDialogs.Confirm(false);
                                 if (confirmed)
                                 {
                                     Console.WriteLine("Quit");
+                                    Environment.Exit(0);
                                 }
                             }
                             break;
@@ -72,9 +74,14 @@ namespace Scoreboard
                         case ConsoleKey.A:
                             if (!game.GameClock.ActiveTimer.IsRunning)
                             {
-                                Console.WriteLine("Skriv in antal sekunder att justera, sätt '-' framför siffran för att dra tillbaka klockan");
-                                TimeSpan timeAdjustment = ConsoleDialogs.TimeSpanFromSeconds();
-                                game.GameClock.AdjustActiveClockTime(timeAdjustment);
+                                Console.WriteLine("Vill du justera tiden?");
+                                (confirmed, cancel) = ConsoleDialogs.Confirm(false);
+                                if (confirmed)
+                                {
+                                    Console.WriteLine("Skriv in antal sekunder att justera, sätt '-' framför siffran för att dra tillbaka klockan");
+                                    TimeSpan timeAdjustment = ConsoleDialogs.TimeSpanFromSeconds();
+                                    game.GameClock.AdjustActiveClockTime(timeAdjustment);
+                                }
                             }
                             break;
 

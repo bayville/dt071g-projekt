@@ -24,16 +24,33 @@ namespace Scoreboard
 
         public override void AdjustTime(TimeSpan adjustment)
         {
-            if (CountDown) 
+            // If countdown - adds to timespan (winds back clock)
+            if (CountDown)
             {
                 CurrentTime -= adjustment;
+
+                // Prevents current time to be greater then period length
+                if (CurrentTime > PeriodLength)
+                {
+                    CurrentTime = PeriodLength;
+                }
+
             }
             else
-            {
-                CurrentTime += adjustment;
+            {  
+                // If countup - prevents adjustment to give period negative time
+                if ((CurrentTime += adjustment) < TimeSpan.Zero)
+                {
+                    adjustment -= CurrentTime;
+                    CurrentTime = TimeSpan.Zero;
+                }
+                else
+                {   
+                    CurrentTime += adjustment;
+                }
             }
-            
 
+            
             HomePenalty1 = _penalties.HomePenalty1;
             HomePenalty2 = _penalties.HomePenalty2;
             AwayPenalty1 = _penalties.AwayPenalty1;
@@ -45,11 +62,7 @@ namespace Scoreboard
             OnTimerUpdated();
         }
 
-        // public virtual void AdjustTime(TimeSpan adjustment)
-        // {
-        //     CurrentTime += adjustment;
-        //     OnTimerUpdated();
-        // }
+
 
         protected override void UpdateTime()
         {
@@ -59,6 +72,7 @@ namespace Scoreboard
             HomePenalty2 = _penalties.HomePenalty2;
             AwayPenalty1 = _penalties.AwayPenalty1;
             AwayPenalty2 = _penalties.AwayPenalty2;
+            
             AdjustPenaltyTimers(HomePenalty1, HomePenalty2, TimeElapsed);
             AdjustPenaltyTimers(AwayPenalty1, AwayPenalty2, TimeElapsed);
 
@@ -68,16 +82,24 @@ namespace Scoreboard
 
         private void AdjustPenaltyTimers(Penalty penalty1, Penalty penalty2, TimeSpan adjustment)
         {
-            
+
             if (penalty1.RemainingTime > TimeSpan.Zero)
             {
                 penalty1.RemainingTime -= adjustment;
+                if (penalty1.RemainingTime > penalty1.PenaltyLength)
+                {
+                    penalty1.RemainingTime = penalty1.PenaltyLength;
+                }
             }
 
 
             if (penalty2.RemainingTime > TimeSpan.Zero)
             {
                 penalty2.RemainingTime -= adjustment;
+                if (penalty2.RemainingTime > penalty2.PenaltyLength)
+                {
+                    penalty2.RemainingTime = penalty2.PenaltyLength;
+                }
             }
         }
     }
