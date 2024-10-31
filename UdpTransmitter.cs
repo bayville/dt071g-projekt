@@ -16,7 +16,7 @@ namespace Scoreboard
             UdpSender = new UdpClient(new IPEndPoint(IPAddress.Any, 0));
             UdpSender.EnableBroadcast = true;
             UdpSender.MulticastLoopback = true;
-            UdpSender.JoinMulticastGroup(MulticastAddress, IPAddress.Parse(LocalIP));
+            UdpSender.JoinMulticastGroup(MulticastAddress, IPAddress.Any);
 
             json.DataSerialized += OnDataSerialized;
         }

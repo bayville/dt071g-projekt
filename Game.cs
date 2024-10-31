@@ -136,7 +136,7 @@ namespace Scoreboard
 
         public GameEventArgs Update()
         {
-            GameEventArgs gameEventArgs = new GameEventArgs(GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings);
+            GameEventArgs gameEventArgs = new GameEventArgs(GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning,GamePenalties.HomePenalty1, GamePenalties.HomePenalty2, GamePenalties.AwayPenalty1, GamePenalties.AwayPenalty2, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings);
             UpdateGame?.Invoke(this, gameEventArgs);
             return gameEventArgs;
         }
