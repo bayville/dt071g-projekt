@@ -88,9 +88,15 @@ namespace Scoreboard
                         case ConsoleKey.S:
                             if (!game.GameClock.ActiveTimer.IsRunning)
                             {
+                                Console.WriteLine("Vill du ändra matchtid?");
+                                Console.WriteLine("\nNär du sätter en exakt matchtid justeras inte utvisningstid.\n");
+                                (confirmed, cancel) = ConsoleDialogs.Confirm(false);
+                                if (confirmed)
+                                {
                                 Console.WriteLine("Ändra matchttid");
                                 TimeSpan timeAdjustment = ConsoleDialogs.TimeSpanFromMinutesSeconds();
                                 game.GameClock.SetCurrentTime(timeAdjustment);
+                                }
                             }
                             break;
 
@@ -232,6 +238,7 @@ namespace Scoreboard
                             break;
                     }
 
+                    game.ConsoleDisplay.UpdateDisplay();
                 }
             });
         }

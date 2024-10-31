@@ -126,8 +126,6 @@ namespace Scoreboard
 
         private void OnTimerEnded(object? sender, EventArgs e)
         {
-            Console.WriteLine(GameClock.ActiveTimer.GetType());
-            // --- Play GameHorn --- (Implement class) 
             ActivateGameTime();
         }
 

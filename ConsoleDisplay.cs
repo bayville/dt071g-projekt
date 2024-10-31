@@ -3,58 +3,119 @@ namespace Scoreboard
     public class ConsoleDisplay
     {
         private GamePenalties _gamePenalties;
-        
+
+        private GameEventArgs? _data;
         public ConsoleDisplay(Game game)
         {
             _gamePenalties = game.GamePenalties;
-            game.UpdateGame += (sender, data) => UpdateDisplay(data);
+            game.UpdateGame += (sender, data) => OnUpdate(data);
         }
 
-        public void UpdateDisplay(GameEventArgs data)
-        {            
-            Console.Clear();
-            Console.WriteLine("\n============== MATCHINFO ==============\n");
-            Console.WriteLine(data.GameMode);
-            Console.WriteLine($"Period: {data.CurrentPeriod}");
-            Console.WriteLine(FormatDisplayTime(data.CurrentTime));
-            Console.WriteLine("\n\tRESULTAT");
-            Console.WriteLine("H\t\tA");
-            Console.WriteLine($"{data.HomeScore}\t\t\t\t{data.AwayScore}\n");
-            if (!data.IsRunning)
+        private void OnUpdate(GameEventArgs data)
+        {
+            _data = data;
+            UpdateDisplay();
+        }
+        public void UpdateDisplay()
+        {
+            if(_data != null)
             {
-                Console.WriteLine("Klockan stoppad!\n");
+                Console.Clear();
+                DisplayHeader("MATCHINFO");
+                DisplayGameInfo(_data);
+                DisplayScore(_data);
+                DisplayGameStatus(_data);
+
+                DisplayHeader("UTVISNINGAR");
+                _gamePenalties.ListAllPenalties();
+
+                // DisplayHeader("KONTROLLER");
+                // DisplayControls(_data.IsRunning);
             }
 
-             Console.WriteLine("\n============== UTVISNINGAR ==============\n");
-            _gamePenalties.ListAllPenalties();
-
-            
-            Console.WriteLine("\n============== KONTROLLER ==============\n");
-            Console.WriteLine("Spacebar = Starta/Stoppa tid");
-            Console.WriteLine("\nH - Hemma mål + | G - Borta mål + | Håll ned Shift för att minska målet");
-            Console.WriteLine("\nA - Justera tid i sekunder | '-' före tiden för att dra tillbaka klockan.");
-            Console.WriteLine("\nN - Ny period | Håll ned Shift för att gå tillbaka en period");
-            Console.WriteLine("\nI - Aktivera Intervall-läge | T - Aktivera Timeout-läge | B - Aktivera pausläge\n\n");
-
-
-  
         }
 
-        private string FormatDisplayTime(TimeSpan time)
+
+        private void DisplayHeader(string header)
         {
-            if (time.TotalMinutes >= 1)
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"\n============== {header} ==============\n");
+            Console.ResetColor();
+        }
+        private void DisplayGameInfo(GameEventArgs data)
+        {
+            Console.WriteLine($"\n{data.GameMode}");
+            Console.WriteLine($"Period: {data.CurrentPeriod}");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"{FormatOutput.FormatGameTime(data.CurrentTime)}");
+            Console.ResetColor();
+        }
+
+        private void DisplayScore(GameEventArgs data)
+        {
+            Console.WriteLine("\nHEMMA   BORTA");
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine($"  {data.HomeScore}       {data.AwayScore}");
+            Console.ResetColor();
+
+        }
+        private void DisplayGameStatus(GameEventArgs data)
+        {
+            if (!data.IsRunning)
             {
-                if (time.TotalMinutes <= 9)
-                {
-                    return $"Tid:\n{time:m\\:ss}\n";
-                }
-                return $"Tid:\n{time:mm\\:ss}\n";
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("\nKLOCKAN STOPPAD");
+                Console.ResetColor();
             }
             else
             {
-                return $"Tid:\n{time:ss\\.f}\n";
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nKLOCKAN KÖRS");
+                Console.ResetColor();
             }
         }
 
+        private void DisplayControls(bool isRunning)
+        {
+
+            Console.WriteLine("SPACEBAR\t- Starta/Stoppa tid");
+            Console.WriteLine("H / H+SHIFT\t- Öka/Minska hemmamål");
+            Console.WriteLine("G / G+SHIFT\t- Öka/Minska bortamål\n");
+
+
+            if (!isRunning)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\nTID:");
+                Console.ResetColor();
+
+                Console.WriteLine("A\t\t- Justera tid i sekunder");
+                Console.WriteLine("S\t\t- Ändra matchtid");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\nUTVISNINGAR:");
+                Console.ResetColor();
+
+                Console.WriteLine("U\t\t- Lägg till utvisning");
+                Console.WriteLine("R\t\t- Ta bort utvisning");
+                Console.WriteLine("E\t\t- Ändra utvisningstid");
+                Console.WriteLine("M\t\t- Flytta utvisning till toppen");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("\nPERIOD / TIMERS:");
+                Console.ResetColor();
+
+                Console.WriteLine("N / N+SHIFT\t- Nästa/Föregående period");
+                Console.WriteLine("I\t\t- Paus-läge");
+                Console.WriteLine("T\t\t- Timeout-läge");
+                Console.WriteLine("P\t\t- Pausläge");
+
+
+                Console.WriteLine("\n\nQ\t\t- Avsluta programmet");
+
+            }
+
+            Console.WriteLine();
+        }
     }
 }

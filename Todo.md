@@ -75,7 +75,7 @@
 
 
 Current Todo:
-Förhindra att utvisningar blir längre än utv-tid vid tidsjustering
+~~Förhindra att utvisningar blir längre än utv-tid vid tidsjustering~~
 Se över vilka knappar som är mest logiska
 Förvald setting -> slutspel ja/nej -> långt powerbreak ja/nej
 Stäm av med SIF-manual + Icast + Annan manual för att se vilka funktioner som saknas.

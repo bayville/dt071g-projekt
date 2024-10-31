@@ -13,7 +13,7 @@ namespace Scoreboard
 
         public UdpTransmitter(GameJsonSerializer json)
         {
-            UdpSender = new UdpClient(new IPEndPoint(IPAddress.Parse(LocalIP), 0));
+            UdpSender = new UdpClient(new IPEndPoint(IPAddress.Any, 0));
             UdpSender.EnableBroadcast = true;
             UdpSender.MulticastLoopback = true;
             UdpSender.JoinMulticastGroup(MulticastAddress, IPAddress.Parse(LocalIP));

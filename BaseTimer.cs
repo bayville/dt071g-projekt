@@ -15,7 +15,6 @@ namespace Scoreboard
         public event EventHandler? TimerStopped;
         public event EventHandler? TimerEnded;
 
-
         protected BaseTimer( bool countDown, TimeSpan timerLength, int interval)
         {
             CountDown = countDown;
@@ -40,6 +39,7 @@ namespace Scoreboard
 
                 if (ShouldStop())
                 {
+                    
                     Stop();
                     OnTimerEnded();
                 }

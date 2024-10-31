@@ -126,18 +126,20 @@ namespace Scoreboard
         // Method to list all penalties in console
         public void ListAllPenalties()
         {
-            Console.WriteLine("Hemmautvisningar:");
+            Console.WriteLine("Hemmautvisningar:\n");
+            Console.WriteLine("Index\tNr\tTid\tAktiv");
             for (int i = 0; i < _homePenalties.Count; i++)
             {
-                Console.WriteLine($"[{i}]\t{_homePenalties[i].PlayerNumber}\t{_homePenalties[i].RemainingTime}\t{_homePenalties[i].IsActive}\t{_homePenalties[i].Team}");
+                Console.WriteLine($"[{i}]\t{_homePenalties[i].PlayerNumber}\t{FormatOutput.FormatPenaltyTime(_homePenalties[i].RemainingTime)}\t{_homePenalties[i].IsActive}");
             }
 
             Console.WriteLine("\n---\n");
 
-            Console.WriteLine("Bortautvisningar");
+            Console.WriteLine("Bortautvisningar\n");
+            Console.WriteLine("Index\tNr\tTid\tAktiv");
             for (int i = 0; i < _awayPenalties.Count; i++)
             {
-                Console.WriteLine($"[{i}]\t{_awayPenalties[i].PlayerNumber}\t{_awayPenalties[i].RemainingTime}\t{_awayPenalties[i].IsActive}\t{_awayPenalties[i].Team}");
+                Console.WriteLine($"[{i}]\t{_awayPenalties[i].PlayerNumber}\t{FormatOutput.FormatPenaltyTime(_awayPenalties[i].RemainingTime)}\t{_awayPenalties[i].IsActive}");
             }
 
         }
