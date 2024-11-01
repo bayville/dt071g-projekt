@@ -4,7 +4,7 @@ namespace Scoreboard
     {
         public int CurrentPeriod { get; private set; }
         public TimeOutTimer(TimeSpan timerLength)
-            :base(true, timerLength, 50)
+            :base(true, timerLength, 100)
         {
             CurrentTime = timerLength;
             Mode = "TimeOut";

@@ -2,7 +2,8 @@ namespace Scoreboard
 {
     public static class ConvertInput
     {
-
+        
+        // Gets user input and converts to int
         public static (int, bool) ConvertToInt()
         {
             
@@ -26,6 +27,8 @@ namespace Scoreboard
             return (number, success);
         
         }
+
+        // Gets user input and converts to double
         public static (double, bool) ConvertToDouble()
         {
         
@@ -49,10 +52,12 @@ namespace Scoreboard
             return (number, success);
         }
 
+        // Converts double to timespan (seconds)
         public static TimeSpan TimeSpanFromSeconds(double seconds){  
             return TimeSpan.FromSeconds(seconds);
         }
 
+        // Converst double and int to timespan (Minutes and seconds)
         public static TimeSpan TimeSpanFromMinutesSeconds(int minutes, double seconds){ 
             
             TimeSpan timeSpanSeconds = TimeSpanFromSeconds(seconds);

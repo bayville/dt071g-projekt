@@ -15,6 +15,8 @@ namespace Scoreboard
         {
             this.game = game;
         }
+        
+        // Starts task to listen for keypresses
         public async Task ListenToKeyPress()
         {
 

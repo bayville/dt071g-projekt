@@ -2,12 +2,14 @@ namespace Scoreboard
 {
     public static class ConsoleDialogs
     {
+        // Dialog to get yes/no
         public static (bool, bool) Confirm(bool canCancel)
         {
             bool correctKey = false;
             bool confirmed = false;
             bool cancel = false;
 
+            // Loops until y/n or x to cancel is pressed
             while (!correctKey)
             {
 
@@ -20,6 +22,7 @@ namespace Scoreboard
                 }
 
 
+                // Reads input
                 var key = Console.ReadKey(true);
 
                 switch (key.Key)
@@ -46,9 +49,13 @@ namespace Scoreboard
 
                 }
             }
+
+            // Returns a tuple 
             return (confirmed, cancel);
         }
 
+
+        // Dialog to choose home/away team
         public static (int, bool) ChooseTeam()
         {
             Console.WriteLine("Välj lag:\n");
@@ -63,7 +70,7 @@ namespace Scoreboard
                 Console.WriteLine("X = Avbryt");
 
 
-
+                // Reads input
                 var key = Console.ReadKey(true);
 
                 switch (key.Key)
@@ -88,9 +95,13 @@ namespace Scoreboard
 
                 }
             }
+
+            // Returns tuple
             return (team, cancel);
         }
 
+
+        // Dialog to choose penalty time
         public static (TimeSpan, bool) ChoosePenaltyTime()
         {
             bool correctKey = false;
@@ -99,12 +110,14 @@ namespace Scoreboard
 
             while (!correctKey)
             {
-                Console.WriteLine("2 = 02:00 (Två minuter)");
+                Console.WriteLine("\n2 = 02:00 (Två minuter)");
                 Console.WriteLine("4 = 04:00 (Fyra minuter)");
                 Console.WriteLine("5 = 05:00 (Fem minuter)");
                 Console.WriteLine("0 = Fyll i tid själv");
-                Console.WriteLine("X = Avbryt");
+                Console.WriteLine("X = Avbryt\n");
+                
 
+                // Reads input
                 var key = Console.ReadKey(true);
 
                 switch (key.Key)
@@ -141,9 +154,12 @@ namespace Scoreboard
                         break;
                 }
             }
+
+            // Returns tuple
             return (time, cancel);
         }
 
+        // Dialog to set playernumber
         public static int SetPlayerNumber()
         {
             int playerNumber = 0;
@@ -159,7 +175,7 @@ namespace Scoreboard
             return playerNumber;
         }
 
-
+        // Get input from user and return a timespan in seconds
         public static TimeSpan TimeSpanFromSeconds()
         {
             double seconds;
@@ -168,6 +184,7 @@ namespace Scoreboard
 
             while (true)
             {
+                // converts input to double
                 (seconds, bool success) = ConvertInput.ConvertToDouble();
 
                 if (success == true)
@@ -176,9 +193,11 @@ namespace Scoreboard
                 }
             }
 
+            // Returns timespan
             return ConvertInput.TimeSpanFromSeconds(seconds);
         }
 
+        // Get input from user and return a timespan in minutes and seconds
         public static TimeSpan TimeSpanFromMinutesSeconds()
         {
             double seconds;
@@ -187,6 +206,7 @@ namespace Scoreboard
             while (true)
             {
                 Console.WriteLine("\nAnge minuter:");
+                 // converts input to int
                 (minutes, bool minutesSuccess) = ConvertInput.ConvertToInt();
 
                 if (minutesSuccess)
@@ -196,12 +216,14 @@ namespace Scoreboard
             while (true)
             {
                 Console.WriteLine("\nAnge sekunder:");
+                 // converts input to double
                 (seconds, bool secondsSuccess) = ConvertInput.ConvertToDouble();
 
                 if (secondsSuccess)
                     break;
             }
 
+            // Returns timespan with minutes and seconds
             return ConvertInput.TimeSpanFromMinutesSeconds(minutes, seconds);
         }
 

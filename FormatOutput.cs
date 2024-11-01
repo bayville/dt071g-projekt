@@ -2,6 +2,7 @@ namespace Scoreboard
 {
     public static class FormatOutput
     {
+        // Formats game times
         public static string FormatGameTime(TimeSpan time)
         {
             if (time.TotalMinutes >= 1)
@@ -17,6 +18,8 @@ namespace Scoreboard
                 return $"{time:ss\\.f}";
             }
         }
+
+        // Formats penalty times
         public static string FormatPenaltyTime(TimeSpan time)
         {
             if (time.TotalMinutes >= 1)

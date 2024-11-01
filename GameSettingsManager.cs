@@ -11,14 +11,18 @@ namespace Scoreboard
         {   
             GameSettings settings;
 
+            // Display menu
             Console.WriteLine("\n\nVälj en förinställd inställning eller anpassa dina egna:");
             Console.WriteLine("1. Seniormatch");
             Console.WriteLine("2. Seniormatch slutspel");
             Console.WriteLine("3. Ungdomsmatch");
             Console.WriteLine("4. Anpassa egna inställningar");
+            
 
+            // Read input
             var key = Console.ReadKey(true);
 
+            // Get settings or configure your own
             switch (key.Key)
             {
                 case ConsoleKey.D1:
@@ -39,12 +43,14 @@ namespace Scoreboard
                     break;
             }
             
+            // Prints selected game settings
             PrintGameSettings(settings);
             
     
             return settings;
         }
 
+        // Preconfigured gamesettings
         private static GameSettings GetPreConfiguredSettings(int setting)
         {
             switch (setting)
@@ -59,6 +65,8 @@ namespace Scoreboard
                     return CustomSettings();
             }
         }
+
+        // Dialog-tree to get custom settings from user
         private static GameSettings CustomSettings()
         {
             Console.Clear();
@@ -83,11 +91,12 @@ namespace Scoreboard
             Console.WriteLine("\nSka klockan räkna ner?");
             (bool countDown, _) = ConsoleDialogs.Confirm(false);
             
-
+            // Return gamesettings
             return new GameSettings(periodLength, intermissionLength, overtimePeriodLength, timeoutLength, powerbreakLength, numberOfPeriods, countDown);
         }
 
 
+        // Prints gamesettings
         public static void PrintGameSettings(GameSettings settings)
         {
             Console.Clear();

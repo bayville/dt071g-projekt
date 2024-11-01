@@ -4,6 +4,8 @@ namespace Scoreboard
     {
         public int HomeScore {get; private set;}
         public int AwayScore {get; private set;}
+        
+        // Event that triggers when score is changed
         public EventHandler? ScoreChanged;
     
     // Adds a goal for specific team

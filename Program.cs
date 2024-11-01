@@ -12,7 +12,6 @@ namespace Scoreboard
 
             // New game with gameSettings
             Game game = new Game(settings, isRestore, restoreData);
-            // New instance of control display
 
             // New instance of controller
             Controller controller = new Controller(game);
@@ -26,6 +25,7 @@ namespace Scoreboard
             // New instance of UdpTransmitter
             _ = new UdpTransmitter(jsonSerializer);
 
+            // Writes gamedata to console.
             game.Update();
             // Listen for keypresses in controller runs as a task
             await controller.ListenToKeyPress();

@@ -7,15 +7,19 @@ namespace Scoreboard
         private GameEventArgs? _data;
         public ConsoleDisplay(Game game)
         {
-            _gamePenalties = game.GamePenalties;
-            game.UpdateGame += (sender, data) => OnUpdate(data);
+            _gamePenalties = game.GamePenalties;    // Saves _gamePenalties instance
+            game.UpdateGame += (sender, data) => OnUpdate(data); // Listens to UpdateGame Event and calls OnUpdate method
         }
 
+        // Saves incoming data and triggers update display
         private void OnUpdate(GameEventArgs data)
-        {
+        {  
+            
             _data = data;
             UpdateDisplay();
         }
+
+        // Writes info to console
         public void UpdateDisplay()
         {
             if(_data != null)
@@ -35,13 +39,15 @@ namespace Scoreboard
 
         }
 
-
+        // Writes out "header"
         private void DisplayHeader(string header)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine($"\n============== {header} ==============\n");
             Console.ResetColor();
         }
+
+        // Displays current timer mode, time and period
         private void DisplayGameInfo(GameEventArgs data)
         {
             Console.WriteLine($"\n{data.GameMode}");
@@ -51,6 +57,7 @@ namespace Scoreboard
             Console.ResetColor();
         }
 
+        // Displays gamescore
         private void DisplayScore(GameEventArgs data)
         {
             Console.WriteLine("\nHEMMA   BORTA");
@@ -59,6 +66,8 @@ namespace Scoreboard
             Console.ResetColor();
 
         }
+
+        // Displays if clock is running or not
         private void DisplayGameStatus(GameEventArgs data)
         {
             if (!data.IsRunning)
@@ -75,6 +84,8 @@ namespace Scoreboard
             }
         }
 
+
+        // Displays controls to control the clock
         private void DisplayControls(bool isRunning)
         {
 

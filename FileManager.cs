@@ -9,9 +9,10 @@ namespace Scoreboard
         public FileManager(GameJsonSerializer json)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(_filePath)!);
-            json.DataSerialized += OnDataSerialized;
+            json.DataSerialized += OnDataSerialized; // Listen to event if Json is Serialized
         }
 
+        // Runs a task to write data to file if its not already running
         private void OnDataSerialized(object? sender, string jsonData)
         {
             if (!_isWriting)
@@ -20,16 +21,20 @@ namespace Scoreboard
             }
         }
 
+        // Writes file to data
         private void WriteToFile(string jsonData)
         {
             try
             {
                 _isWriting = true;
+                // Creates a temporary file
                 string temporaryFile = Path.Combine(
                     Path.GetDirectoryName(_filePath)!, $"gamedata_.tmp");
 
+                // Writes data to temporary file
                 File.WriteAllText(temporaryFile, jsonData);
 
+                // Writes over file with the temporary file
                 File.Move(temporaryFile, _filePath, true);
             }
             catch (Exception ex)
@@ -38,6 +43,7 @@ namespace Scoreboard
             }
             finally
             {
+                // If succesful reset is writing bool
                 _isWriting = false;
             }
         }

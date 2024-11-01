@@ -41,6 +41,8 @@ namespace Scoreboard
             Update();
         }
 
+
+        // Activates intermission timer
         public void ActivateIntermission()
         {
             UnregisterFromUpdates();
@@ -48,6 +50,8 @@ namespace Scoreboard
             RegisterForUpdates();
             Update();
         }
+
+        // Activates powerbreaktimer
         public void ActivatePowerbreak()
         {
             UnregisterFromUpdates();
@@ -56,6 +60,7 @@ namespace Scoreboard
             Update();
         }
 
+        // Activates gametimer
         public void ActivateGameTime()
         {
             UnregisterFromUpdates();
@@ -78,6 +83,7 @@ namespace Scoreboard
             Update();
         }
 
+        // Goes to previous period        
         public void PreviousPeriod()
         {
 
@@ -102,6 +108,8 @@ namespace Scoreboard
         }
 
         // Events
+
+        // Register to timerevents
         private void RegisterForUpdates()
         {
             UnregisterFromUpdates();
@@ -110,30 +118,34 @@ namespace Scoreboard
             GameClock.ActiveTimer.TimerEnded += OnTimerEnded;
         }
 
+        // Unregister from timer
         private void UnregisterFromUpdates()
         {
             if (GameClock.ActiveTimer != null)
             {
                 GameClock.ActiveTimer.TimerUpdated -= OnTimerUpdated;
+                GameClock.ActiveTimer.TimerEnded += OnTimerEnded;
             }
         }
 
+        // Triggers every tick of timer
         private void OnTimerUpdated(object? sender, EventArgs args)
         {
             Update();
         }
 
-
+        // Triggers when timer time has ended (Used to switch back to gametime after timeout, powerbreak etc.)
         private void OnTimerEnded(object? sender, EventArgs e)
         {
             ActivateGameTime();
         }
-
+        // Triggers when any game instance has changed (goals, penatlies etc.)
         private void OnGameChanged(object? sender, EventArgs e)
         {
             Update();
         }
 
+        // Sends gamedata via event
         public GameEventArgs Update()
         {
             GameEventArgs gameEventArgs = new GameEventArgs(GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning,GamePenalties.HomePenalty1, GamePenalties.HomePenalty2, GamePenalties.AwayPenalty1, GamePenalties.AwayPenalty2, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings);

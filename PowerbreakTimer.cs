@@ -4,7 +4,7 @@ namespace Scoreboard
     {
         public int CurrentPeriod { get; private set; }
         public PowerbreakTimer(TimeSpan timerLength)
-            :base(true, timerLength, 500)
+            :base(true, timerLength, 100)
         {
             CurrentTime = timerLength;
             Mode = "Powerbreak";

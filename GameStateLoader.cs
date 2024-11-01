@@ -10,6 +10,7 @@ namespace Scoreboard
             "gamedata.json"
         );
 
+        // Tries to restore previous game by reading json file. 
         public static GameEventArgs? LoadLastState()
         {
             try
@@ -23,6 +24,7 @@ namespace Scoreboard
                     return null;
                 }
 
+                // Reads file data
                 string jsonData = File.ReadAllText(BackupPath);
                 GameEventArgs gameState = JsonSerializer.Deserialize<GameEventArgs>(jsonData)!;
                 Console.WriteLine("Laddning av tidigare matchdata lyckades.");

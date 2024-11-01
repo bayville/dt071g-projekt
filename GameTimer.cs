@@ -22,6 +22,8 @@ namespace Scoreboard
             AwayPenalty2 = _penalties.AwayPenalty2;
         }
 
+
+        // Overrides method in BaseTimer to add ability adjust penalties.
         public override void AdjustTime(TimeSpan adjustment)
         {
             // If countdown - adds to timespan (winds back clock)
@@ -47,6 +49,7 @@ namespace Scoreboard
                 else
                 {   
                     CurrentTime += adjustment;
+                    
                 }
             }
 
@@ -56,6 +59,7 @@ namespace Scoreboard
             AwayPenalty1 = _penalties.AwayPenalty1;
             AwayPenalty2 = _penalties.AwayPenalty2;
 
+            // Adjust time on penaltytimers.
             AdjustPenaltyTimers(HomePenalty1, HomePenalty2, adjustment);
             AdjustPenaltyTimers(AwayPenalty1, AwayPenalty2, adjustment);
 
@@ -63,7 +67,7 @@ namespace Scoreboard
         }
 
 
-
+        // Overrides method in BaseTimer to add ability adjust penalties
         protected override void UpdateTime()
         {
             base.UpdateTime();
@@ -73,13 +77,17 @@ namespace Scoreboard
             AwayPenalty1 = _penalties.AwayPenalty1;
             AwayPenalty2 = _penalties.AwayPenalty2;
             
+            // Adjust time on penaltytimers.
             AdjustPenaltyTimers(HomePenalty1, HomePenalty2, TimeElapsed);
             AdjustPenaltyTimers(AwayPenalty1, AwayPenalty2, TimeElapsed);
 
+            // Calls update function in penalty-class
             _penalties.Update();
 
         }
 
+
+        // Adjust penalty timers
         private void AdjustPenaltyTimers(Penalty penalty1, Penalty penalty2, TimeSpan adjustment)
         {
 

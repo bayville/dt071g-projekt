@@ -6,7 +6,8 @@ namespace Scoreboard
         {
             bool isRestore = false;
             GameSettings gameSettings;
-
+            
+            // if backup of last game exist, ask if restore game
             if (savedState != null)
             {
                 Console.WriteLine("\nÅterställ senaste matchen?");
@@ -22,10 +23,12 @@ namespace Scoreboard
                 }
             }
 
+            // Else start new game
             Console.Clear();
             Console.WriteLine("\nStarta ny match");
             gameSettings = GameSettingsManager.GetGameSettings();
 
+            // checks for user confirmation if settings are correct
             Console.WriteLine("\nÄr inställningarna korrekta?");
         
             (bool confirm, _) = ConsoleDialogs.Confirm(false);
@@ -37,7 +40,6 @@ namespace Scoreboard
                 Console.WriteLine("\nÄr inställningarna korrekta?");
                 (confirm, _) = ConsoleDialogs.Confirm(false);
             }
-
             return (gameSettings, isRestore, null);
         }
 
