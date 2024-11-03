@@ -26,32 +26,7 @@ namespace Scoreboard
         // Overrides method in BaseTimer to add ability adjust penalties.
         public override void AdjustTime(TimeSpan adjustment)
         {
-            // If countdown - adds to timespan (winds back clock)
-            if (CountDown)
-            {
-                CurrentTime -= adjustment;
-
-                // Prevents current time to be greater then period length
-                if (CurrentTime > PeriodLength)
-                {
-                    CurrentTime = PeriodLength;
-                }
-
-            }
-            else
-            {  
-                // If countup - prevents adjustment to give period negative time
-                if ((CurrentTime += adjustment) < TimeSpan.Zero)
-                {
-                    adjustment -= CurrentTime;
-                    CurrentTime = TimeSpan.Zero;
-                }
-                else
-                {   
-                    CurrentTime += adjustment;
-                    
-                }
-            }
+            base.AdjustTime(adjustment);
 
             
             HomePenalty1 = _penalties.HomePenalty1;

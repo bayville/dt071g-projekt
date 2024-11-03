@@ -16,10 +16,12 @@ namespace Scoreboard
         public int AwayScore {get; set;}
         public int HomeScore {get; set;}
         public GameSettings GameSettings {get; set;}
+        public TimeSpan GameClockCurrentTime {get; set;}
 
         
-        public GameEventArgs(TimeSpan currentTime, string gameMode, bool isRunning, Penalty homePenalty1, Penalty homePenalty2,Penalty awayPenalty1,Penalty awayPenalty2, List<Penalty> homePenalties, List<Penalty> awayPenalties, int homeScore, int awayScore, int currentPeriod, bool isOvertime, GameSettings gameSettings)
+        public GameEventArgs(TimeSpan gameClockCurrentTime, TimeSpan currentTime, string gameMode, bool isRunning, Penalty homePenalty1, Penalty homePenalty2,Penalty awayPenalty1,Penalty awayPenalty2, List<Penalty> homePenalties, List<Penalty> awayPenalties, int homeScore, int awayScore, int currentPeriod, bool isOvertime, GameSettings gameSettings)
         {
+            GameClockCurrentTime = gameClockCurrentTime;
             CurrentTime = currentTime;
             GameMode = gameMode;
             IsRunning = isRunning;

@@ -2,14 +2,14 @@ namespace Scoreboard
 {
     public class GameClock
     {
-        private GameTimer _gameTimer;
+        public GameTimer GameTimer {get; private set;}
         private GameSettings _gameSettings;
         public BaseTimer ActiveTimer {get; private set;}
 
         public GameClock(GameSettings settings, GamePenalties gamePenalties)
         {
-            _gameTimer = new GameTimer(settings.PeriodLength, gamePenalties, settings.CountDown);
-            ActiveTimer = _gameTimer;
+            GameTimer = new GameTimer(settings.PeriodLength, gamePenalties, settings.CountDown);
+            ActiveTimer = GameTimer;
             _gameSettings = settings;
         }
 
@@ -31,7 +31,7 @@ namespace Scoreboard
         public void ActivateGameTime()
         {
             StopActiveClock();
-            ActiveTimer = _gameTimer;
+            ActiveTimer = GameTimer;
         }
 
         // Activates powerbreak

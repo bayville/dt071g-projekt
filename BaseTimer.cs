@@ -29,7 +29,7 @@ namespace Scoreboard
 
             IsRunning = true;
             cancellationTokenSource = new CancellationTokenSource();
-            startTime = DateTime.Now;
+            startTime = DateTime.Now; // sets timestamp
 
             while (IsRunning)
             {
@@ -60,7 +60,32 @@ namespace Scoreboard
         // Adjust timer currenttime with timespan
         public virtual void AdjustTime(TimeSpan adjustment)
         {
-            CurrentTime += adjustment;
+            // If countdown - adds to timespan (winds back clock)
+            if (CountDown)
+            {
+                CurrentTime -= adjustment;
+
+                // Prevents current time to be greater then timer length
+                if (CurrentTime > TimerLength)
+                {
+                    CurrentTime = TimerLength;
+                }
+
+            }
+            else
+            {
+                // If countup - prevents adjustment to give timer negative time
+                if ((CurrentTime += adjustment) < TimeSpan.Zero)
+                {
+                    adjustment -= CurrentTime;
+                    CurrentTime = TimeSpan.Zero;
+                }
+                else
+                {
+                    CurrentTime += adjustment;
+
+                }
+            }
 
             // Trigger event for time updated
             OnTimerUpdated();

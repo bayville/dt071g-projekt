@@ -7,6 +7,8 @@ namespace Scoreboard
         public GamePeriod GamePeriod { get; private set; }
         public GamePenalties GamePenalties { get; private set;}
         public ConsoleDisplay ConsoleDisplay {get; private set;}
+        
+        // Event to send data across application
         public EventHandler<GameEventArgs>? UpdateGame;
         public GameSettings Settings { get; private set; }
 
@@ -69,7 +71,6 @@ namespace Scoreboard
             Update();
         }
 
-
         // Periods macros
         public void NextPeriod()
         {
@@ -103,7 +104,7 @@ namespace Scoreboard
         {
             GameScore.SetScore(restoreData.HomeScore, restoreData.AwayScore);
             GamePeriod.SetCurrentPeriod(restoreData.CurrentPeriod);
-            GameClock.SetCurrentTime(restoreData.CurrentTime);
+            GameClock.SetCurrentTime(restoreData.GameClockCurrentTime);
             GamePenalties.RestorePenaltyLists(restoreData.HomePenalties, restoreData.AwayPenalties);
         }
 
@@ -148,7 +149,7 @@ namespace Scoreboard
         // Sends gamedata via event
         public GameEventArgs Update()
         {
-            GameEventArgs gameEventArgs = new GameEventArgs(GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning,GamePenalties.HomePenalty1, GamePenalties.HomePenalty2, GamePenalties.AwayPenalty1, GamePenalties.AwayPenalty2, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings);
+            GameEventArgs gameEventArgs = new GameEventArgs(GameClock.GameTimer.CurrentTime, GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning, GamePenalties.HomePenalty1, GamePenalties.HomePenalty2, GamePenalties.AwayPenalty1, GamePenalties.AwayPenalty2, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings);
             UpdateGame?.Invoke(this, gameEventArgs);
             return gameEventArgs;
         }

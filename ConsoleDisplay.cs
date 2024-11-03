@@ -33,8 +33,8 @@ namespace Scoreboard
                 DisplayHeader("UTVISNINGAR");
                 _gamePenalties.ListAllPenalties();
 
-                // DisplayHeader("KONTROLLER");
-                // DisplayControls(_data.IsRunning);
+                DisplayHeader("KONTROLLER");
+                DisplayControls(_data.IsRunning);
             }
 
         }
