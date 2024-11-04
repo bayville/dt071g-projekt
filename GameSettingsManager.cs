@@ -105,7 +105,7 @@ namespace Scoreboard
             Console.WriteLine($"Pauslängd:              {FormatDisplayTime(settings.IntermissionLength)}");
             Console.WriteLine($"Förlängning:            {FormatDisplayTime(settings.OvertimePeriodLength)}");
             Console.WriteLine($"Timeoutlängd:           {FormatDisplayTime(settings.TimeOutLength)}");
-            Console.WriteLine($"Pauslängd:              {FormatDisplayTime(settings.PowerbreakLength)}");
+            Console.WriteLine($"Powerbreaklängd:              {FormatDisplayTime(settings.PowerbreakLength)}");
             Console.WriteLine($"Antal perioder:         {settings.NumberOfPeriods}");
             Console.WriteLine($"Räkna ner:              {(settings.CountDown ? "Ja" : "Nej")}");
         }
