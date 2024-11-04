@@ -146,7 +146,7 @@ namespace Scoreboard
             Update();
         }
 
-        // Sends gamedata via event
+        // Sends gamedata via event and can return gamedata
         public GameEventArgs Update()
         {
             GameEventArgs gameEventArgs = new GameEventArgs(GameClock.GameTimer.CurrentTime, GameClock.ActiveTimer.CurrentTime, GameClock.ActiveTimer.Mode, GameClock.ActiveTimer.IsRunning, GamePenalties.HomePenalty1, GamePenalties.HomePenalty2, GamePenalties.AwayPenalty1, GamePenalties.AwayPenalty2, GamePenalties._homePenalties, GamePenalties._awayPenalties, GameScore.HomeScore, GameScore.AwayScore, GamePeriod.CurrentPeriod, GamePeriod.IsOvertime, Settings);

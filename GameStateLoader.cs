@@ -33,13 +33,6 @@ namespace Scoreboard
             catch (Exception ex)
             {
                 Console.WriteLine($"Failed to load game state: {ex.Message}");
-                Console.WriteLine($"Stack Trace: {ex.StackTrace}");
-
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
-                    Console.WriteLine($"Inner Exception Stack Trace: {ex.InnerException.StackTrace}");
-                }
 
                 return null;
             }

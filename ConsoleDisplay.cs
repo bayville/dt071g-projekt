@@ -119,7 +119,7 @@ namespace Scoreboard
                 Console.WriteLine("N / N+SHIFT\t- Nästa/Föregående period");
                 Console.WriteLine("I\t\t- Paus-läge");
                 Console.WriteLine("T\t\t- Timeout-läge");
-                Console.WriteLine("P\t\t- Pausläge");
+                Console.WriteLine("P\t\t- Powerbreakläge");
 
 
                 Console.WriteLine("\n\nQ\t\t- Avsluta programmet");

@@ -9,7 +9,6 @@ namespace Scoreboard
             
             int number = 0;
             bool success;
-            
             string? input = Console.ReadLine();
 
             try

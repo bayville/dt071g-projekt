@@ -12,7 +12,7 @@ namespace Scoreboard
 
             // New game with gameSettings
             Game game = new Game(settings, isRestore, restoreData);
-
+            
             // New instance of controller
             Controller controller = new Controller(game);
             
