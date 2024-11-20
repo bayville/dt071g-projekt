@@ -12,7 +12,8 @@ Använder sig av UDP-multicast för att skicka data över nätverket, detta inne
 ## Screenshot GUI-skiss
 ![GUI Screenshot](https://github.com/bayville/dt071g-projekt/blob/main/gui.png)
 
-
+## Diagram för applikation
+![Scoreboard Diagram](https://github.com/bayville/dt071g-projekt/blob/main/Scoreboard.gh.drawio.svg)
 
 ## Multicast-settings
 - UdpClient: IPAdress.Any
